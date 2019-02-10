@@ -30,7 +30,7 @@ class Patient(models.Model):
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
-    mobile = models.IntegerField()
+    mobile = models.CharField(max_length = 10)
     address = models.CharField(max_length= 500, blank = True)
     city = models.CharField(max_length = 50)
     state = models.CharField(max_length = 50, blank = True)

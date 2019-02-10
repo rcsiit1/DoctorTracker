@@ -20,7 +20,8 @@ from . import views
 urlpatterns = [
     path('registration/',views.RegistrationPage,name="registration"),
     path('login/',views.LoginPage,name="login"),
-    path('registeruser/',views.RegisterUser, name="registeruser")
+    path('registeruser/',views.RegisterUser, name="registeruser"),
+    path('login_evealuate/',views.login_evaluation,name="login-evaluate")
     
 ]
 
