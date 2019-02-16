@@ -77,13 +77,13 @@ def login_evaluation(request):
     if request.POST['role'] == 'doctor':
         email = request.POST['email']
         password = request.POST['password']
-        user = User.objects.get(email = email)
+        user = User.objects.filter(email = email)
         print(user)
-        if user:
-            if user.password == password:
-                doctor = Doctor.objects.get(user_id = user)
-                request.session['email'] = user.email
-                request.session['firstname'] = doctor.firstname
+        if user[0]:
+            if user[0].password == password and user[0].role == 'doctor':
+                doctor = Doctor.objects.filter(user_id = user[0])
+                request.session['email'] = user[0].email
+                request.session['firstname'] = doctor[0].firstname
                 return render(request,"doctorfinder/homepage-doctor.html")
             else:
                 message = "Your password is incorrect or user doesn't exist"
@@ -94,13 +94,13 @@ def login_evaluation(request):
     else:
         email = request.POST['email']
         password = request.POST['password']
-        user = User.objects.get(email = email)
+        user = User.objects.filter(email = email)
         print(user)
-        if user:
-            if user.password == password:
-                patient = Patient.objects.get(user_id = user)
-                request.session['email'] = user.email
-                request.session['firstname'] = patient.firstname
+        if user[0]:
+            if user[0].password == password and user[0].role == 'patient':
+                patient = Patient.objects.filter(user_id = user[0])
+                request.session['email'] = user[0].email
+                request.session['firstname'] = patient[0].firstname
                 return render(request,"doctorfinder/homepage-doctor.html")
             else:
                 message = "Your password is incorrect or user doesn't exist"
