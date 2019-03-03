@@ -21,7 +21,14 @@ urlpatterns = [
     path('registration/',views.RegistrationPage,name="registration"),
     path('login/',views.LoginPage,name="login"),
     path('registeruser/',views.RegisterUser, name="registeruser"),
-    path('login_evealuate/',views.login_evaluation,name="login-evaluate")
+    path('login_evealuate/',views.login_evaluation,name="login-evaluate"),
+    path('forgotpassword/' ,views.forgotPage,name="forgot"),
+    path('verify-otp-password/',views.forgotPassword,name="forgot-password"),
+    path('logout/',views.logout,name="logout"),
+    path('homepage/',views.Homepage,name="homepage"),
+    path('reset-password/',views.ResetPassword,name="reset-password")
+    
+
     
 ]
 

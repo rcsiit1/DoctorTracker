@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponseRedirect,reverse
 from .models import *
 from random import randint
 from .utils import *
@@ -11,6 +11,18 @@ def LoginPage(request):
 
 def RegistrationPage(request):
     return render(request,'doctorfinder/registration.html')
+
+def forgotPage(request):
+    return render(request,"doctorfinder/forgot-password.html")
+
+def Homepage(request):
+    if 'email' in request.session and 'role' in request.session:
+        if request.session['role'] == 'patient':
+
+            all_doctors = Doctor.objects.all()
+            return render(request,'doctorfinder/homepage-patient.html',{'all_doctors':all_doctors})
+    else:
+        return HttpResponseRedirect(reverse('login'))
 
 def RegisterUser(request):
     try:
@@ -74,6 +86,7 @@ def RegisterUser(request):
         return render(request,'doctorfinder/registration.html',{'message':message})
 
 def login_evaluation(request):
+
     if request.POST['role'] == 'doctor':
         email = request.POST['email']
         password = request.POST['password']
@@ -84,6 +97,7 @@ def login_evaluation(request):
                 doctor = Doctor.objects.filter(user_id = user[0])
                 request.session['email'] = user[0].email
                 request.session['firstname'] = doctor[0].firstname
+                request.session['role'] = user[0].role
                 return render(request,"doctorfinder/homepage-doctor.html")
             else:
                 message = "Your password is incorrect or user doesn't exist"
@@ -91,7 +105,9 @@ def login_evaluation(request):
         else:
             message = "user doesn't exist"
             return render(request,"doctorfinder/login.html",{'message':message})
-    else:
+
+    if request.POST['role'] == 'patient':
+
         email = request.POST['email']
         password = request.POST['password']
         user = User.objects.filter(email = email)
@@ -101,7 +117,8 @@ def login_evaluation(request):
                 patient = Patient.objects.filter(user_id = user[0])
                 request.session['email'] = user[0].email
                 request.session['firstname'] = patient[0].firstname
-                return render(request,"doctorfinder/homepage-doctor.html")
+                request.session['role'] = user[0].role
+                return HttpResponseRedirect(reverse('homepage'))
             else:
                 message = "Your password is incorrect or user doesn't exist"
                 return render(request,"doctorfinder/login.html",{'message':message})
@@ -109,3 +126,55 @@ def login_evaluation(request):
             message = "user doesn't exist"
             return render(request,"doctorfinder/login.html",{'message':message})
 
+
+
+
+def forgotPassword(request):
+    email = request.POST['email']
+    try:
+        user = User.objects.get(email = email)
+        if user:
+            if user.email == email:
+                otp = randint(100000, 9999999)
+                user.otp=otp
+                user.save()
+                email_subject = "This is your new OTP"
+                sendmail(email_subject,'mail_template',email,{'otp':otp})
+                return render(request,'doctorfinder/forgot-password-verification.html',{'email':email})
+            else:
+                message = 'This email does not match'
+                return render(request,"doctorfinder/forgot-password.html",{'message':message})
+        else:
+            message = 'This email is not available'
+            return render(request,"doctorfinder/forgot-password.html",{'message':message})
+    except:
+        message = 'This email is not available'
+        return render(request,"doctorfinder/forgot-password.html",{'message':message})
+
+def logout(request):
+    del request.session['email']
+    del request.session['role']
+    del request.session['firstname']
+    return HttpResponseRedirect(reverse('login'))
+
+def ResetPassword(request):
+    
+    otp = request.POST['otp']
+    newPassword = request.POST['newpass']
+    confirmPassword = request.POST['confirmpass']
+    email = request.POST['email']
+    try:
+        user = User.objects.get(email = email)
+        if confirmPassword == newPassword and str(user.otp) == otp:
+            user.password = newPassword
+            user.save()
+            return HttpResponseRedirect(reverse('login'))
+        else:
+            message = "Either password and confirm password doesn't match or you have entered a wrong otp"
+            return render(request,"doctorfinder/forgot-password-verification.html",{'message':message})
+    except:
+        message = "Ivalid request"
+        return render(request,"doctorfinder/forgot-password-verification.html",{'message':message})
+
+
+        
