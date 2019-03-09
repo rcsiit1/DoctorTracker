@@ -1,0 +1,348 @@
+{% extends "enterprise/base.html" %}
+{% block content%}
+
+
+    {% load static %}
+     <link href="{% static '/enterprise/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css"/>
+     <link href="{% static '/enterprise/js/datatables/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css"></script>
+	 <script src="{% static '/enterprise/js/datatables/datatables.min.js' %}" ></script>
+	 <script src="{% static '/enterprise/js/datatables/plugins/bootstrap/datatables.bootstrap.js' %}" ></script>
+	 <script src="{% static '/enterprise/js/table_data.js' %}" ></script>
+	 <script src="{% static '/enterprise/js/print.js' %}" ></script>
+	 <style>
+		 .formodal{}
+		 .forquery{}
+	 </style>
+	 
+     
+			 
+			<!-- start page content -->
+            <div class="page-content-wrapper">
+                <div class="page-content">
+                    <div class="page-bar">
+                        <div class="page-title-breadcrumb">
+                            <div class=" pull-left">
+                                <div class="page-title">Cases List</div>
+                            </div>
+                            <ol class="breadcrumb page-breadcrumb pull-right">
+                                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="{% url 'base' %}">Home</a>&nbsp;<i class="fa fa-angle-right"></i>
+                                </li>
+                                <li><a class="parent-item" href="#">Case</a>&nbsp;<i class="fa fa-angle-right"></i>
+                                </li>
+                                <li class="active">All Cases</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tabbable-line">
+                                                           
+                                <ul class="nav customtab nav-tabs" role="tablist">
+	                                <li class="nav-item"><a href="#tab1" class="nav-link active"  data-toggle="tab" >Active </a></li>
+
+	                            </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active fontawesome-demo" id="tab1">
+                                        <div class="row">
+					                        <div class="col-md-12">
+					                            <div class="card card-topline-red">
+					                                <div class="card-head">
+					                                    <header></header>
+					                                    <div class="tools">
+					                                       
+						                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+						                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+					                                    </div>
+					                                </div>
+					                                <div class="card-body ">
+					                                    <div class="row">
+					                                        <div class="col-md-6 col-sm-6 col-xs-6">
+					                                            <div class="btn-group">
+					                                                
+					                                            </div>
+					                                        </div>
+					                                        <div class="col-md-6 col-sm-6 col-xs-6">
+					                                            <div class="btn-group pull-right">
+					                                                <a class="btn deepPink-bgcolor  btn-outline dropdown-toggle" data-toggle="dropdown">Tools
+					                                                    <i class="fa fa-angle-down"></i>
+					                                                </a>
+					                                                <ul class="dropdown-menu pull-right">
+					                                                    <li>
+																				<a href="javascript:;" id="print1">
+																						<i class="fa fa-print"></i> Print </a>
+					                                                    </li>
+					                                                    <li>
+					                                                        <a href="javascript:;">
+					                                                            <i class="fa fa-file-pdf-o"></i> Save as PDF </a>
+					                                                    </li>
+					                                                    <li>
+					                                                        <a href="javascript:;">
+					                                                            <i class="fa fa-file-excel-o"></i> Export to Excel </a>
+					                                                    </li>
+					                                                </ul>
+					                                            </div>
+					                                        </div>
+														</div>
+														{% if active %}
+														{% if  active_case_id %}
+					                                    <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle" id="example4">
+					                                        <thead>
+					                                            <tr>
+																	<th>Case id</th>
+					                                            	<th>Patient id</th>
+					                                                <th>Firstname </th>
+					                                                <th>Lastname </th>
+					                                                <th>Gender </th>
+					                                                <th>Date of Birth</th>
+					                                                <th>Bloodgroup</th>
+					                                                <th>City</th>
+																	<th>State</th>
+																	<th>Disease</th>
+																	<th>Status</th>
+																	<th>Close case</th>
+																	<th>Power your voice</th>
+																	<th style="width: 60px;">Action</th>
+					                                            </tr>
+					                                        </thead>
+					                                        <tbody>
+																	{% load my_tags %}
+																{% for data,caseid in active|zip:active_case_id %}
+																
+																<tr class="odd gradeX">
+																	<form method="GET" action="{% url 'manage_old_case' %}" >
+																			{% csrf_token %}
+																	<td><input type="hidden" name="caseid" value="{{caseid.id}}"/>{{caseid.id}}</td>	
+																	<td><input type="hidden" name="patientid" value="{{data.id}}"/>{{data.id}}</td>	
+																	<td>{{data.firstname|title}}</td>
+																	<td class="left">{{data.lastname|title}}</td>
+																	<td class="left">{{data.gender|title}}</td>
+																	<td class="left">{{data.date_of_birth}}</td>
+																	<td class="left">{{data.blood_group}}</td>
+																	<td class="left">{{data.city|title}}</td>
+																	<td class="left">{{data.state|title}}</td>
+																	<td class="left"><input type="hidden" name="diseasename" value="{{data.disease_name}}"/><span class="label label-danger"> {{data.disease_name|title}}</span></td>
+																	<td class="left">{%if data.status == 1 %}<span class="label label-warning"> Open</span> {% endif %}</td>
+																	<td>
+																			<button  class="btn btn-success"  name="close_case">Close Case
+																				
+																			</button>
+																
+																</td>
+																	<td class="center"> <input type="submit" value="Record a session" name="record" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-circle btn-pink" 
+																		style="
+																		background-image: url({% static 'enterprise/img/mic.svg' %});
+																		background-position: 10px 6px; 
+																		background-repeat: no-repeat;
+																		padding: 0px 20px 12px 40px;" ></input></td> </form>
+																	<td>
+																				<a  class="formodal btn btn-danger btn-xs" id="delete1" name="{{caseid.id}}">
+																					<i class="fa fa-trash-o "></i>
+																				</a>
+																	
+																	</td>
+																
+																</tr>
+															
+															{% endfor %}
+															</tbody>
+														</table>
+														{% else %}
+														<h1> No data in patient database</h1>
+														{% endif %}
+														{% else %}
+														<h1> No data in patient database</h1>
+														{% endif %}
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+                                    </div>
+                                   
+                    					</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   
+			<!-- end page content -->
+</div>
+    <div class="page-content-wrapper">
+                <div class="page-content">
+                    <div class="page-bar">
+                        <div class="page-title-breadcrumb">
+                            <div class=" pull-left">
+                            </div>
+                            <ol class="breadcrumb page-breadcrumb pull-right">
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tabbable-line">
+                                                           
+                                <ul class="nav customtab nav-tabs" role="tablist">
+	                                <li class="nav-item"><a href="#tab1" class="nav-link active"  data-toggle="tab" >Closed</a></li>
+
+	                            </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active fontawesome-demo" id="tab1">
+                                        <div class="row">
+					                        <div class="col-md-12">
+					                            <div class="card card-topline-red">
+					                                <div class="card-head">
+					                                    <header></header>
+					                                    <div class="tools">
+					                                       
+						                                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
+						                                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
+					                                    </div>
+					                                </div>
+					                                <div class="card-body ">
+					                                    <div class="row">
+					                                        <div class="col-md-6 col-sm-6 col-xs-6">
+					                                            <div class="btn-group">
+					                                               
+					                                            </div>
+					                                        </div>
+					                                        <div class="col-md-6 col-sm-6 col-xs-6">
+					                                            <div class="btn-group pull-right">
+					                                                <a class="btn deepPink-bgcolor  btn-outline dropdown-toggle" data-toggle="dropdown">Tools
+					                                                    <i class="fa fa-angle-down"></i>
+					                                                </a>
+					                                                <ul class="dropdown-menu pull-right">
+					                                                    <li>
+					                                                        <a href="javascript:;" id="print2">
+					                                                            <i class="fa fa-print"></i> Print </a>
+					                                                    </li>
+					                                                    <li>
+					                                                        <a href="javascript:;">
+					                                                            <i class="fa fa-file-pdf-o"></i> Save as PDF </a>
+					                                                    </li>
+					                                                    <li>
+					                                                        <a href="javascript:;">
+					                                                            <i class="fa fa-file-excel-o"></i> Export to Excel </a>
+					                                                    </li>
+					                                                </ul>
+					                                            </div>
+					                                        </div>
+														</div>
+														{% if closed %}
+														{%if  closed_case_id %}
+					                                    <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle" id="example1">
+					                                        <thead>
+					                                            <tr>
+																	
+																	<th>Case id</th>
+					                                            	<th>Patient id</th>
+					                                                <th>Firstname </th>
+					                                                <th>Lastname </th>
+					                                                <th>Gender </th>
+					                                                <th>Date of Birth</th>
+					                                                <th>Bloodgroup</th>
+					                                                <th>City</th>
+																	<th>State</th>
+																	<th>Disease</th>
+																	<th>Status</th>
+																	
+																	<th style="width: 60px;">Action</th>
+					                                            </tr>
+					                                        </thead>
+					                                        <tbody>
+																{% load my_tags %}
+																{% for data,caseid in closed|zip:closed_case_id  %}
+																
+																<tr class="odd gradeX">
+																		<form method="POST" >
+																	<td>{{caseid.id}}</td>
+																	<td>{{data.id}}</td>	
+																	<td>{{data.firstname | title}}</td>
+																	<td class="left">{{data.lastname | title}}</td>
+																	<td class="left">{{data.gender |title}}</td>
+																	<td class="left">{{data.date_of_birth}}</td>
+																	<td class="left">{{data.blood_group}}</td>
+																	<td class="left">{{data.city |title}}</td>
+																	<td class="left">{{data.state |title}}</td>
+																	<td class="left"> <span class="label label-danger"> {{data.disease_name|title}}</span></td>
+																	<td class="left">{%if data.status == 0 %}<span class="label label-primary"> Closed </span>{% endif %}</td>
+																	<td>
+																			
+																				<a  class="formodal btn btn-danger btn-xs" id="delete2" name="{{caseid.id}}">
+																					<i class="fa fa-trash-o "></i>
+																				</a>
+																				
+																	
+																	</td>
+																</form>
+																</tr>
+															
+															{% endfor %}
+															</tbody>
+														</table>
+														{% else %}
+														<h1> No data in patient database</h1>
+														{% endif %}
+														{% else %}
+														<h1> No data in patient database</h1>
+														{% endif %}
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+                                    </div>
+                                   
+                    					</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   
+            <!-- end page content -->
+           
+ </div>
+    
+   
+	<!-- Bootstrap modal -->
+	<div class="container">
+            
+              <div class="modal custom fade" id="deleteModal" role="dialog">
+              <div class="modal-dialog">
+          
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Delete Patient's Case</h4>
+                  </div>
+                  <div class="modal-body">
+          
+                    <strong>Warning: </strong> <pid="regEmail">Case Once deleted cant be retrieved.All details would be deleted by this action.
+						Want to delete?</p>
+                  </div>
+                  <div class="modal-footer">
+					  <form method="POST" action="{% url 'delete_case'%}">
+						{% csrf_token %}
+					  <input type="hidden" id="myid" name="id"/>
+                    <input type="submit" class="btn btn-danger" value="Yes, Delete!" ></input> <button type="button" class="btn btn-success" data-dismiss="modal" style="margin-bottom: 10px">No</button></form>
+                  </div>
+                </div>
+          
+              </div>
+            </div>
+          </div><br><br>
+		
+			
+			<script>
+			
+		   $(document).ready(function(){
+          
+            $(".formodal").click(function(){
+				var id = $(this).attr('name');
+			    $("#myid").val(id);
+				$("#deleteModal").modal({backdrop:true});
+				});
+		 });
+			</script>
+	  
+
+	
+{% endblock %}

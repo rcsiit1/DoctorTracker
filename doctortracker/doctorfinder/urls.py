@@ -26,7 +26,13 @@ urlpatterns = [
     path('verify-otp-password/',views.forgotPassword,name="forgot-password"),
     path('logout/',views.logout,name="logout"),
     path('homepage/',views.Homepage,name="homepage"),
-    path('reset-password/',views.ResetPassword,name="reset-password")
+    path('reset-password/',views.ResetPassword,name="reset-password"),
+    path('all-patient/',views.PatientList,name="patient-list"),
+    path('edit-patient-profile/',views.EditPatientprofile,name="edit-patient-profile"),
+    path('doctor-profile-picture/',views.DoctorProfilePicture,name="doctor-profile-picture"),
+     path('',views.IndexPage,name="index"),
+    
+
     
 
     

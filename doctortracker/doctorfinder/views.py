@@ -1,13 +1,17 @@
 from django.shortcuts import render,HttpResponseRedirect,reverse
+from django.http import JsonResponse
 from .models import *
 from random import randint
 from .utils import *
+from django.core import serializers
 
 
 # Create your views here.
 
 def LoginPage(request):
     return render(request,"doctorfinder/login.html")
+def IndexPage(request):
+    return render(request,'doctorfinder/index.html')
 
 def RegistrationPage(request):
     return render(request,'doctorfinder/registration.html')
@@ -20,9 +24,24 @@ def Homepage(request):
         if request.session['role'] == 'patient':
 
             all_doctors = Doctor.objects.all()
-            return render(request,'doctorfinder/homepage-patient.html',{'all_doctors':all_doctors})
+            return render(request,'doctorfinder/base.html',{'all_doctors':all_doctors})
+        else:
+            all_patients = Patient.objects.all()
+            all_doctors = Doctor.objects.all()
+            return render(request,'doctorfinder/base.html',{'all_patients':all_patients,'all_doctors': all_doctors})
     else:
         return HttpResponseRedirect(reverse('login'))
+def EditPatientprofile(request):
+    patient_id = request.POST['patient-id']
+    patient_info = Patient.objects.get(id=patient_id)
+    return render(request,'doctorfinder/edit_patient.html',{'patient_info' : patient_info})
+def DoctorProfilePicture(request):
+    return render(request,'doctorfinder/settings_base.html')
+
+def PatientList(request):
+    all_patients = Patient.objects.all()
+    res = serializers.serialize("json", all_patients)
+    return JsonResponse(res,safe=False)
 
 def RegisterUser(request):
     try:
@@ -98,7 +117,7 @@ def login_evaluation(request):
                 request.session['email'] = user[0].email
                 request.session['firstname'] = doctor[0].firstname
                 request.session['role'] = user[0].role
-                return render(request,"doctorfinder/homepage-doctor.html")
+                return HttpResponseRedirect(reverse('homepage'))
             else:
                 message = "Your password is incorrect or user doesn't exist"
                 return render(request,"doctorfinder/login.html",{'message':message})
