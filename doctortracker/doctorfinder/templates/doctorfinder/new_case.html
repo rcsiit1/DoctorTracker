@@ -1,9 +1,9 @@
-{% extends "enterprise/base.html" %}
+{% extends "doctorfinder/base.html" %}
 {% load static %}
 
-<link href="{% static '/enterprise/js/jqueryui/jquery-ui.min.css'%}" rel="stylesheet"  type="text/css" />
-<link href="{% static '/enterprise/js/jqueryui/jquery-ui.structure.min.css'%}" rel="stylesheet"  type="text/css" />
-<link href="{% static '/enterprise/js/jqueryui/jquery-ui.theme.min.css'%}" rel="stylesheet"  type="text/css" />
+<link href="{% static '/doctorfinder/js/jqueryui/jquery-ui.min.css'%}" rel="stylesheet"  type="text/css" />
+<link href="{% static '/doctorfinder/js/jqueryui/jquery-ui.structure.min.css'%}" rel="stylesheet"  type="text/css" />
+<link href="{% static '/doctorfinder/js/jqueryui/jquery-ui.theme.min.css'%}" rel="stylesheet"  type="text/css" />
 {% block content %}
 <style>
 	.mybtn{}
@@ -17,7 +17,7 @@
 					<div class="page-title">Record a New Case</div>
 				</div>
 				<ol class="breadcrumb page-breadcrumb pull-right">
-						<li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="{% url 'base' %}">Home</a>&nbsp;<i class="fa fa-angle-right"></i>
+						<li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="">Home</a>&nbsp;<i class="fa fa-angle-right"></i>
 						</li>
 						<li><a class="parent-item" href="#">Case</a>&nbsp;<i class="fa fa-angle-right"></i>
 						</li>
@@ -42,7 +42,7 @@
 														<div class="col-lg-5 col-md-6">
 															{% if all_patients %}
 															<select class="form-control" id="myselect" required>
-						                                          <option value="selectop">Select Patient</option>
+						                    <option value="selectop">Select Patient</option>
 																{% for patients in all_patients %}
 																   	<option value="{{patients.id}}" id="{{patients.id}}">PID-{{patients.id}} {{patients.firstname|title}} {{patients.lastname|title}}</option>
 																{% endfor %}
@@ -52,10 +52,6 @@
 														</div>
 														
 													</form>
-														<span style="font-weight:150;padding-right:22px;padding-top:5px; top:-3px;position:relative;font-size:20px;">or</span>
-															<a href="{% url 'add_patient' %}" class="btn btn-circle btn-primary">
-															<i class="fa fa-plus"></i> Add New </a>
-
 													</div>
 
 												</form>
@@ -66,7 +62,7 @@
 										<div class="inbox-body no-pad">
 											<section class="mail-list">
 												<div class="mail-sender">
-												<form method="GET" action="{% url 'prescription' %}" class="form-horizontal" onkeypress="return event.keyCode != 13;" >
+												<form method="GET" action="{% url 'add-new-case' %}" class="form-horizontal" onkeypress="return event.keyCode != 13;" >
 													<div class="form-group">
 														<label>Patient Name</label>
 														<input type="text" class="form-control"  id="patientname"  placeholder="Patient Name" name="patientname"  required onkeypress="return false;">
@@ -83,48 +79,14 @@
 																<label>Gender</label>
 																<input type="text" class="form-control" placeholder="Gender" id="patientgender" name="patientgender"  required onkeypress="return false;">
 															</div>
-															
-
-															<div class="form-group">
-																<label >Select Language</label>
-																<select class="form-control" id="language" required>
-																	  <option selected="selected" value="en-US" >en-US</option>
-																	  <option value="gu-IN" >gu-IN</option>
-																	  <option value="hi-IN" >hi-IN</option>
-																	  <option value="mr-IN" >mr-IN</option>
-																	  <option value="en-IN" >en-IN</option>
-																</select>
-																
-															</div>
-													
-										  			<div class="form-group">
-														<label>Case detail</label><br>
-														<span id="speech" style="color:red;">Start Speaking!</span>
-    													<span id="interim" >You will see live transcription here :)</span><br><br>
-														<textarea rows="7" id="opt" name="opt" class="form-control"  placeholder="Use your speech to record" required></textarea>
-													</div>
-
-													
-													
-													<div style="width:100%;height:80px">
-														<input type="button" id="listen"  class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect margin-right-10 btn-primary" style="float:right;margin:10px;background-image:url({% static 'enterprise/img/micon.svg' %});background-repeat: no-repeat;background-position: 15px 15px;" >
-															
-													</input>
-													</div>
-
-													<div class="form-group">
-														<label>Translate</label><br>
-														<span id="speech" style="color:red;">Translation!</span></span>
-    													<span id="interim" >Stenoclever understands english only, but you can record in any language, we will translate it for you :)</span><br><br>
-														<textarea rows="7" id="op" name="op" class="form-control"  placeholder="Translation will appear here" required onkeypress="return false;"></textarea>
-													</div>
-													<button style="position:relative;margin-left:538px;margin-top:22px;" type="button" id="translate" class="btn btn-success btn-md">Translate</button>
-													<input type="button" id="manipulate" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect margin-right-10 btn-danger" style="float:right;margin:10px;background-image:url({% static 'enterprise/img/suggest.png' %});background-repeat: no-repeat;background-position: 15px 15px;">
-												</input><br><br>
 													
 													<div class="form-group">
-														<label>Diseases <span style="color:red;">(Either enter disease manually or select from the suggestions..)</span></label><br>
+														<label>Diseases <span style="color:red;">(Either enter disease)</span></label><br>
 														<input type="text" id="mytext"  name="disease" class="form-control !important" required>
+													</div>
+													<div class="form-group">
+														<label>Symptoms <span style="color:red;">(Enter the symptoms)</span></label><br>
+														<input type="text" id="mytext"  name="symptoms" class="form-control !important" required>
 													</div>
 													<br><br>
 													<a href="" class="btn btn-sm btn-primary">Cancel</a>
@@ -135,17 +97,6 @@
 										</div>
 									</div>
 								</div>
-							
-								<!-- start suggestions-->
-								<div class="col-md-3">
-									<div class="inbox-sidebar">
-										<a data-title="Compose" class="btn blue compose-btn btn-block m-0">
-											<i class="fa fa-heartbeat"></i>Suggestions</a>
-
-										<ul id="hello" class="nav nav-pills nav-stacked labels-info inbox-divider">
-										</ul>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -154,7 +105,7 @@
 		</div>
 	</div>
 </div>
-<!--<script src="{% static '/enterprise/js/myspeechscript.js' %}" ></script>-->
+<!--<script src="{% static '/doctorfinder/js/myspeechscript.js' %}" ></script>-->
 
 <script type="text/javascript">
 	$(document).on("change", "#myselect" , function(){
@@ -170,14 +121,15 @@
         $.ajax({
             type:"GET",
             data:"id="+selected,
-            url : '{% url "send_details_patient" %}',
+            url : "{% url 'get-patient-details' %}",
  
             success: function(res){
-				var finalJson=JSON.parse(res)
-				$("#patientid").val(finalJson[0].pk);
-				$("#patientname").val(finalJson[0].fields.firstname+"  "+finalJson[0].fields.lastname+"");
-				$("#patientdob").val(finalJson[0].fields.date_of_birth);
-				$("#patientgender").val(finalJson[0].fields.gender);
+							console.log(res);
+								var finalJson=JSON.parse(res)
+								$("#patientid").val(finalJson[0].pk);
+								$("#patientname").val(finalJson[0].fields.firstname+"  "+finalJson[0].fields.lastname+"");
+								$("#patientdob").val(finalJson[0].fields.birthdate);
+								$("#patientgender").val(finalJson[0].fields.gender);
             }
 		});
 	}
@@ -187,7 +139,7 @@
         $.ajax({
             type:"GET",
             data:"data="+speechdata,
-            url : '{% url "send_details_disease" %}',
+            url : '',
  
             success: function(jsonresult){
 				obj=JSON.parse(jsonresult)
@@ -212,7 +164,7 @@
 	 $(document).ready(function(){
 		
 			$.ajax({
-				url : '{% url "get_disease" %}',
+				url : '',
 	 			success: function(res){
 					obj=JSON.parse(res)
 					$('#mytext').tagEditor({
@@ -318,7 +270,7 @@ $(document).ready(function(){
         $.ajax({
             type:"GET",
             data:"data="+speechdata,
-            url : '{% url "translate_function" %}',
+            url : '',
  
             success: function(jsonresult){
 				obj=JSON.parse(jsonresult)
@@ -330,7 +282,7 @@ $(document).ready(function(){
 	});
 
   </script>
-  <script src="{% static '/enterprise/js/jqueryui/jquery-ui.min.js' %}" ></script>
+  <script src="{% static '/doctorfinder/js/jqueryui/jquery-ui.min.js' %}" ></script>
   
 	{% endblock%}
 					

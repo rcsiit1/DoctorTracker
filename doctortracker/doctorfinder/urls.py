@@ -30,12 +30,12 @@ urlpatterns = [
     path('all-patient/',views.PatientList,name="patient-list"),
     path('edit-patient-profile/',views.EditPatientprofile,name="edit-patient-profile"),
     path('doctor-profile-picture/',views.DoctorProfilePicture,name="doctor-profile-picture"),
-     path('',views.IndexPage,name="index"),
-    
+    path('',views.IndexPage,name="index"),
+    path('add-patient',views.AddPatient,name="add-patient"),
+    path('add-new-case',views.AddNewCase,name="add-new-case"),
+    path('get-patient-details/',views.GetPatientDetails,name="get-patient-details"),
+    path('add-new-case/',views.AddNewCaseToDatabase,name="add-new-case"),
 
-    
-
-    
 ]
 
 

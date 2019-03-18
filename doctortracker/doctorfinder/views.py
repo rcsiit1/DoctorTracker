@@ -19,6 +19,9 @@ def RegistrationPage(request):
 def forgotPage(request):
     return render(request,"doctorfinder/forgot-password.html")
 
+def AddPatient(request):
+    return render(request,'doctorfinder/add_patient.html')
+
 def Homepage(request):
     if 'email' in request.session and 'role' in request.session:
         if request.session['role'] == 'patient':
@@ -31,10 +34,39 @@ def Homepage(request):
             return render(request,'doctorfinder/base.html',{'all_patients':all_patients,'all_doctors': all_doctors})
     else:
         return HttpResponseRedirect(reverse('login'))
+def AddNewCase(request):
+    all_patients = Patient.objects.all()
+    return render(request,'doctorfinder/new_case.html',{'all_patients':all_patients})
+
+def GetPatientDetails(request):
+    patient_id = request.GET['id']
+    print('patientid ----------->',patient_id)
+    patient_details = Patient.objects.filter(id = patient_id)
+    print(patient_details)
+    res = serializers.serialize('json',patient_details)
+    return JsonResponse(res,safe=False)
+
+def AddNewCaseToDatabase(request):
+    patient_id = request.GET['patientid']
+    print('patient ------>',patient_id)
+    doctor_id = request.session['id']
+    print('sdnfndoigo----->',doctor_id)
+    patient = Patient.objects.get(id = patient_id)
+    print(patient)
+    doctor = Doctor.objects.get(user_id = doctor_id)  
+    print(doctor)
+    disease = request.GET['disease']
+    symptoms = request.GET['symptoms']
+    Case.objects.create(patient_id = patient, doctor_id = doctor, disease = disease, symptoms = symptoms)
+    return HttpResponseRedirect(reverse('homepage'))
+
+
+
 def EditPatientprofile(request):
     patient_id = request.POST['patient-id']
     patient_info = Patient.objects.get(id=patient_id)
     return render(request,'doctorfinder/edit_patient.html',{'patient_info' : patient_info})
+
 def DoctorProfilePicture(request):
     return render(request,'doctorfinder/settings_base.html')
 
@@ -117,6 +149,7 @@ def login_evaluation(request):
                 request.session['email'] = user[0].email
                 request.session['firstname'] = doctor[0].firstname
                 request.session['role'] = user[0].role
+                request.session['id'] = user[0].id
                 return HttpResponseRedirect(reverse('homepage'))
             else:
                 message = "Your password is incorrect or user doesn't exist"
