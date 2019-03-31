@@ -228,5 +228,18 @@ def ResetPassword(request):
         message = "Ivalid request"
         return render(request,"doctorfinder/forgot-password-verification.html",{'message':message})
 
+def allcase(request):
+    print("--->> ",request.session['id'])
+  
+    doctorid=Doctor.objects.get(user_id=request.session['id'])
+    allcase=Case.objects.filter(doctor_id=doctorid).select_related('patient_id',"doctor_id")
+    print(allcase)
 
+    for i in allcase:
+        print("--> p - name ",i.patient_id.firstname)
+        print("--> d - name ",i.doctor_id.firstname)
+
+    
+
+    return render(request,"doctorfinder/all_cases.html",{'allcase':allcase})
         

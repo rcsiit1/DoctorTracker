@@ -42,6 +42,7 @@ class Case(models.Model):
     doctor_id = models.ForeignKey(Doctor, on_delete = models.CASCADE)
     disease = models.CharField(max_length = 100)
     symptoms = models.CharField(max_length = 200)
+    status=models.CharField(max_length = 50,default="active")
 
 class Appointment(models.Model):
     doctor_id = models.ForeignKey(Doctor, on_delete = models.CASCADE)

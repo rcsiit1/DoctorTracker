@@ -34,7 +34,8 @@ urlpatterns = [
     path('add-patient',views.AddPatient,name="add-patient"),
     path('add-new-case',views.AddNewCase,name="add-new-case"),
     path('get-patient-details/',views.GetPatientDetails,name="get-patient-details"),
-    path('add-new-case/',views.AddNewCaseToDatabase,name="add-new-case"),
+    path('create-new-case/',views.AddNewCaseToDatabase,name="create-new-case"),
+    path('all-case/',views.allcase,name="allcase"),
 
 ]
 
