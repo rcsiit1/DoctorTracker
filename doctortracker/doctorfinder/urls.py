@@ -37,6 +37,11 @@ urlpatterns = [
     path('create-new-case/',views.AddNewCaseToDatabase,name="create-new-case"),
     path('all-case/',views.allcase,name="allcase"),
 
+    #patient zone
+    
+    path('patient-homepage/',views.Patient_Homepage,name="Patient_Homepage"),
+    path('update-patient-profile/', views.updatePatientProfilePage,name="update-patient-profile"),
+    
 ]
 
 

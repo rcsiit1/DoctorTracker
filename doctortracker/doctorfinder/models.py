@@ -37,6 +37,15 @@ class Patient(models.Model):
     gender = models.CharField(max_length= 10)
     birthdate = models.DateField()
 
+    #updated patient profile
+
+    blood_group=models.CharField(max_length=10,blank= True)
+    blood_presure=models.CharField(max_length=10,blank= True)
+    sugar=models.CharField(max_length=10,blank= True)
+    Haemoglobin=models.CharField(max_length=10,blank= True)
+    profile_pic=models.FileField(upload_to='img/',default='patient_icon.png')
+    
+
 class Case(models.Model):
     patient_id = models.ForeignKey(Patient, on_delete = models.CASCADE)
     doctor_id = models.ForeignKey(Doctor, on_delete = models.CASCADE)
