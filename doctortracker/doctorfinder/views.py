@@ -88,6 +88,10 @@ def EditPatientprofile(request):
 def DoctorProfilePicture(request):
     return render(request,'doctorfinder/settings_base.html')
 
+def doctor_password(request):
+    return render(request,'doctorfinder/change_password.html')
+
+
 def PatientList(request):
     all_patients = Patient.objects.all()
     res = serializers.serialize("json", all_patients)
@@ -349,4 +353,22 @@ def updatePatientProfilePage(request):
         return HttpResponseRedirect(reverse('homepage'))
 
 
-    
+def doctor_change_password(request):
+    id=request.session['id']
+    user=User.objects.get(id=id)
+
+    old_password=user.password
+
+    current=request.POST['current']
+    new_password=request.POST['new_password']
+    confirm=request.POST['confirm']
+
+    if old_password==current and new_password==confirm:
+        user.password=confirm
+        user.save()
+        message="Your Password have been changed successfully!"
+        setvalue="set"
+        return render(request,"doctorfinder/password_changed.html")
+    else:
+        error_msg="Incorrect Password , Try Again  !!"
+        return render(request,"doctorfinder/change_password.html",{'error_msg':error_msg})

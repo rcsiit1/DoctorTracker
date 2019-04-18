@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'doctorfinder',
         'USER':'root',
-        'PASSWORD':'root@123',
+        'PASSWORD':'password',
         'HOST':'localhost',
         'PORT':'3306',
     }

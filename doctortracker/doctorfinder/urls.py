@@ -41,7 +41,8 @@ urlpatterns = [
     
     path('patient-homepage/',views.Patient_Homepage,name="Patient_Homepage"),
     path('update-patient-profile/', views.updatePatientProfilePage,name="update-patient-profile"),
-    
+    path('doctor-password/',views.doctor_password,name="doctor-password"),
+    path('doctor-change-password/',views.doctor_change_password,name="doctor-change-password"),
 ]
 
 
