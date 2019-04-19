@@ -47,8 +47,13 @@ urlpatterns = [
     
     #patient zone
     path('patient-homepage/',views.Patient_Homepage,name="Patient_Homepage"),
-    path('update-patient-profile/', views.updatePatientProfilePage,name="update-patient-profile"),
+    path('update-patient-Health-profile/', views.update_Patient_Health_ProfilePage,name="update-patient-profile"),
+    path('patient-profile-page/', views.patient_profile_page,name="patient-profile-page"),
+    path('update-patient-profile/', views.update_patient_profile,name="patient-profile-update"),
+    path('view-patient-profile/', views.view_patient_profile,name="view-patient-profile"),
     
+    
+
     
 ]
 

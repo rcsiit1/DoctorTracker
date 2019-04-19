@@ -198,6 +198,7 @@ def login_evaluation(request):
                 request.session['email'] = user[0].email
                 request.session['firstname'] = patient[0].firstname
                 request.session['role'] = user[0].role
+                request.session['id'] = user[0].id
                 return HttpResponseRedirect(reverse('Patient_Homepage'))
             else:
                 message = "Your password is incorrect or user doesn't exist"
@@ -308,7 +309,7 @@ def allcase(request):
 
 """
 
-def updatePatientProfilePage(request):
+def update_Patient_Health_ProfilePage(request):
     id=request.POST['id']
     firstname = request.POST['firstname']
     lastname = request.POST['lastname']
@@ -325,6 +326,7 @@ def updatePatientProfilePage(request):
 
     disease=request.POST['disease']
     symptoms=request.POST['symptoms']
+    case_status=request.POST['status']
 
     try:
         patient_user=Patient.objects.get(id=id)
@@ -346,12 +348,12 @@ def updatePatientProfilePage(request):
     
 
             case_id=request.POST['id']
-
             case_details=Case.objects.get(id=case_id)
 
             if case_details:
                 case_details.disease=disease
                 case_details.symptoms=symptoms
+                case_details.status=case_status
                 case_details.save()
 
             return HttpResponseRedirect(reverse('homepage'))
@@ -393,7 +395,7 @@ def change_profilepic(request):
     doctor.profile_pic=request.FILES['profile']
     doctor.save()
     #request.session['profile_pic']=doctor.profile_pic
-    print("############################--->",doctor.profile_pic)
+    #print("############################--->",doctor.profile_pic)
 
     return HttpResponseRedirect(reverse('homepage'))
 
@@ -455,5 +457,36 @@ def update_doctor_profile(request):
     else:
         print("Errrror ")
 
-        
-        
+def patient_profile_page(request):
+    patient=Patient.objects.get(user_id=request.session['id'])
+
+    return render(request,"doctorfinder/patient_settings_base.html",{'patient':patient})
+
+def update_patient_profile(request):
+    patient=Patient.objects.get(user_id=request.session['id'])
+
+    patient.firstname=request.POST['firstname']
+    patient.lastname=request.POST['lastname']
+    patient.mobile=request.POST['mobile']
+    patient.address=request.POST['address']
+    patient.gender=request.POST['gender']
+    patient.city=request.POST['city']
+    patient.state=request.POST['state']
+    patient.save()
+    return HttpResponseRedirect(reverse('Patient_Homepage'))
+
+
+def view_patient_profile(request):
+    id=request.session['id']
+    patient_info=Patient.objects.get(user_id=id)
+
+#doctorid=Doctor.objects.get(user_id=request.session['id'])
+
+    allcase=Case.objects.filter(patient_id=patient_info).select_related('patient_id',"doctor_id")
+    
+    """for i in allcase:
+        print("--> p - name ",i.patient_id.firstname)
+        print("--> d - name ",i.doctor_id.firstname)
+        print("status --> ",i.status)"""
+
+    return render(request,"doctorfinder/patient_profile.html",{'patient_info':patient_info,'allcase':allcase})    

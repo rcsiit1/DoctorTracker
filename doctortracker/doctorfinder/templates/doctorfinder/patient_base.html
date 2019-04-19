@@ -95,7 +95,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">
                                 <li>
-                                    <a href="{% url 'doctor-profile-picture' %}">
+                                    <a href="{% url 'view-patient-profile' %}">
                                         <img src="{% static '/doctorfinder/img/account.svg' %}"></img> Profile </a>
                                 </li>
                                 <li>
@@ -546,7 +546,7 @@
 								{% for doctor in all_doctors %}
 									<li>
 										<div class="prog-avatar">
-											<img src="{% static '/doctorfinder/img/patient_icon.png' %}"></img>
+											<img src="{{doctor.profile_pic.url}}"></img>
 										</div>
 										<div class="details">
 											<div class="title">
