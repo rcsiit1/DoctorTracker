@@ -172,6 +172,12 @@ def login_evaluation(request):
                 request.session['firstname'] = doctor[0].firstname
                 request.session['role'] = user[0].role
                 request.session['id'] = user[0].id
+
+            
+
+               # request.session['profile_pic']=doctor[0].profile_pic
+                print("----------> Profile pic-->",doctor[0].profile_pic.url)
+
                 return HttpResponseRedirect(reverse('homepage'))
             else:
                 message = "Your password is incorrect or user doesn't exist"
@@ -367,8 +373,87 @@ def doctor_change_password(request):
         user.password=confirm
         user.save()
         message="Your Password have been changed successfully!"
-        setvalue="set"
         return render(request,"doctorfinder/password_changed.html")
     else:
         error_msg="Incorrect Password , Try Again  !!"
         return render(request,"doctorfinder/change_password.html",{'error_msg':error_msg})
+
+
+def doctor_pic_profile(request):
+    id=request.session['id']
+    doc_id=Doctor.objects.get(user_id=id)
+
+    if doc_id:
+        pro_pic=doc_id.profile_pic
+        return render(request,"doctorfinder/change_profile_pic.html",{'pro_pic':pro_pic})
+
+
+def change_profilepic(request):
+    doctor=Doctor.objects.get(user_id=request.session['id'])
+    doctor.profile_pic=request.FILES['profile']
+    doctor.save()
+    #request.session['profile_pic']=doctor.profile_pic
+    print("############################--->",doctor.profile_pic)
+
+    return HttpResponseRedirect(reverse('homepage'))
+
+def doc_profile(request):
+    id=request.session['id']
+    doctor=Doctor.objects.get(user_id=id)
+
+    user=User.objects.get(id=id)
+    email=user.email
+
+    if doctor and email:
+        return render(request,"doctorfinder/doctor_profile.html",{'doctor':doctor,'email':email})
+    else:
+        return HttpResponseRedirect(reverse('homepage'))
+
+def edit_doctor_profile(request):
+    id=request.session['id']
+    doctor=Doctor.objects.get(user_id=id)
+    user=User.objects.get(id=id)
+    #email=user.email
+
+    if doctor:
+        return render(request,"doctorfinder/edit_doctor_profile.html",{'doctor':doctor})
+    else:
+        return HttpResponseRedirect(reverse('homepage'))
+
+def update_doctor_profile(request):
+
+    doctor=Doctor.objects.get(user_id=request.session['id'])
+
+    firstname=request.POST['firstname']
+    lastname=request.POST['lastname']
+    mobile=request.POST['mobile']
+    qualification=request.POST['qualification']
+    specialization=request.POST['specialization']
+    gender=request.POST['gender']
+    city=request.POST['city']
+    state=request.POST['state']
+    location=request.POST['location']
+    hospitals=request.POST['hospitals']
+    address=request.POST['address']
+    aboutme=request.POST['aboutme']
+
+    if doctor:
+        doctor.firstname=firstname
+        doctor.lastname=lastname
+        doctor.mobile=mobile
+        doctor.qualification=qualification
+        doctor.specialization=specialization
+        doctor.gender=gender
+        doctor.city=city
+        doctor.state=state
+        doctor.location=location
+        doctor.address=address
+        doctor.clinic=hospitals
+        doctor.about_doc=aboutme
+        doctor.save()
+        return render(request,"doctorfinder/doctor_profile.html",{'doctor':doctor})
+    else:
+        print("Errrror ")
+
+        
+        

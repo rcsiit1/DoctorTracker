@@ -25,6 +25,9 @@ class Doctor(models.Model):
     state = models.CharField(max_length = 50, blank= True)
     gender = models.CharField(max_length= 10)
     birthdate = models.DateField()
+    location = models.CharField(max_length= 30, blank= True)
+    about_doc = models.CharField(max_length= 100, blank= True)
+    profile_pic=models.FileField(upload_to='doctorfinder/img/',default='doc_male.png')
 
 class Patient(models.Model):
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)

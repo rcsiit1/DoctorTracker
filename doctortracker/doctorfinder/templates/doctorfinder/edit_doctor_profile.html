@@ -1,4 +1,4 @@
-{% extends "enterprise/settings_base.html" %}
+{% extends "doctorfinder/settings_base.html" %}
 
 <!-- start page content -->
 			{% block content %}
@@ -27,31 +27,42 @@
                                      
                                 </div>
                                 <div class="card-body" id="bar-parent">
-                                    <form action="{% url 'update_user_profile' %}" id="form_sample_1" class="form-horizontal" method="POST">
+                                    <form action="{% url 'update-doctor-profile' %}" id="form_sample_1" class="form-horizontal" method="POST">
                                         {% csrf_token %}
-                                        {% if doctor_info %}
+                                        {% if doctor %}
                                         <div class="form-body">
                                         <div class="form-group row">
+
+                                                <input type="hidden" name="id" value="{{doctor.user_id}}">
                                                 <label class="control-label col-md-3">First Name
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <input type="text" name="firstname" data-required="1"  class="form-control input-height" value="{{doctor_info.firstname}}" required/> </div>
+                                                    <input type="text" name="firstname" data-required="1"  class="form-control input-height" value="{{doctor.firstname}}" required/> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="control-label col-md-3">Last Name
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <input type="text" name="lastname" data-required="1"  class="form-control input-height" value="{{doctor_info.lastname}}" required/> </div>
+                                                    <input type="text" name="lastname" data-required="1"  class="form-control input-height" value="{{doctor.lastname}}" required/> </div>
                                             </div>
                                             
+                                            <div class="form-group row">
+                                                    <label class="control-label col-md-3">Mobile
+                                                        <span class="required"> * </span>
+                                                    </label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="mobile" data-required="1"  class="form-control input-height" value="{{doctor.mobile}}" required/> </div>
+                                                </div>
+                                                
+
                                             <div class="form-group row">
                                                 <label class="control-label col-md-3">Qualification
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <input type="text" name="qualification" data-required="1"  class="form-control input-height" value="{{doctor_info.qualification}}" required/> </div>
+                                                    <input type="text" name="qualification" data-required="1"  class="form-control input-height" value="{{doctor.qualification}}" required/> </div>
                                             </div>
 											
 											<div class="form-group row">
@@ -59,7 +70,7 @@
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <input type="text" name="specialization" data-required="1"  class="form-control input-height" value="{{doctor_info.specialization}}" required/> </div>
+                                                    <input type="text" name="specialization" data-required="1"  class="form-control input-height" value="{{doctor.speciality}}" required/> </div>
                                             </div>
                                             
                                             <div class="form-group row">
@@ -67,23 +78,14 @@
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <select class="form-control input-height" name="gender">
-                                                        
-                                                        <option selected="selected" value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                    </select>
+                                                    <select class="form-control input-height" name="gender" required>
+                                                        <option selected="selected" value="{{doctor.gender}}">{{doctor.gender}}</option>
+                                                    <option  value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
                                                 </div>
                                             </div>
                                             
-                                               
-                                        	 <div class="form-group row">
-                                                <label class="control-label col-md-3">Street
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-5">
-                                                    <textarea  class="form-control-textarea" rows="5" name="street">{{doctor_info.street}}</textarea>
-                                                </div>
-                                            </div>
 											
 											<div class="form-group row">
                                                 <label class="control-label col-md-3">City
@@ -91,7 +93,7 @@
                                                 </label>
                                                 <div class="col-md-5">
                                                     <select class="form-control input-height" name="city" required>
-                                                        <option selected="selected" value="{{doctor_info.city}}">{{doctor_info.city}}</option>
+                                                        <option selected="selected" value="{{doctor.city}}">{{doctor.city}}</option>
                                                         <option value="Surat">Surat</option>
                                                         <option value="Vadodara">Vadodara</option>
                                                         <option value="Ahmedabad">Ahmedabad</option>
@@ -108,7 +110,7 @@
                                                 </label>
                                                 <div class="col-md-5">
                                                     <select class="form-control input-height" name="state" required>
-                                                        <option selected="selected" value="{{doctor_info.state}}">{{doctor_info.state}}</option>
+                                                        <option selected="selected" value="{{doctor.state}}">{{doctor.state}}</option>
                                                         <option value="Gujarat">Gujarat</option>
                                                         <option value="Maharashtra">Maharashtra</option>
                                                         <option value="Tamil Nadu">Tamil Nadu</option>
@@ -118,61 +120,40 @@
                                                     </select>
                                                 </div>
                                             </div>
-											
+
 											<div class="form-group row">
-                                                <label class="control-label col-md-3">Country
+                                                <label class="control-label col-md-3">Location 
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <select class="form-control input-height" name="country" required>
-                                                        
-                                                        <option value="India">India</option>
-                                                        <option value="U.S">U.S</option>
-                                                        <option value="U.K">U.K</option>
-                                                        <option value="Australia">Australia</option>
-                                                        <option value="New Zealand">New Zealand</option>
-                                                        <option value="West Indies">West Indies</option>
-                                                    </select>
+                                                    <textarea name="location"  class="form-control-textarea" rows="2" >{{doctor.location|default:''}}</textarea>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="control-label col-md-3">Achievements
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-5">
-                                                    <textarea name="achievements"  class="form-control-textarea" rows="5" >{{doctor_info.achievements|default:''}}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="control-label col-md-3">Conferences
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-5">
-                                                    <textarea name="conferences"  class="form-control-textarea" rows="5" >{{doctor_info.conferences|default:''}}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="control-label col-md-3">Membership in Associations
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-5">
-                                                    <textarea name="membership"  class="form-control-textarea" rows="5" >{{doctor_info.membership|default:''}}</textarea>
-                                                </div>
-                                            </div>
+
 											<div class="form-group row">
-                                                <label class="control-label col-md-3">Hospitals Visited
+                                                <label class="control-label col-md-3">Hospitals 
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <textarea name="hospitals"  class="form-control-textarea" rows="5" >{{doctor_info.hospitals|default:''}}</textarea>
+                                                    <textarea name="hospitals"  class="form-control-textarea" rows="2" >{{doctor.clinic|default:''}}</textarea>
                                                 </div>
                                             </div>
+                                            
+                                            <div class="form-group row">
+                                                    <label class="control-label col-md-3">Address
+                                                        <span class="required"> * </span>
+                                                    </label>
+                                                    <div class="col-md-5">
+                                                        <textarea name="address"  class="form-control-textarea" rows="5" >{{doctor.address|default:''}}</textarea>
+                                                    </div>
+                                                </div>
+
                                             <div class="form-group row">
                                                 <label class="control-label col-md-3">About Me
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <textarea name="aboutme"  class="form-control-textarea" rows="5" >{{doctor_info.aboutme|default:''}}</textarea>
+                                                    <textarea name="aboutme"  class="form-control-textarea" rows="5" >{{doctor.about_doc|default:''}}</textarea>
                                                 </div>
                                             </div>
 										</div>
@@ -180,7 +161,7 @@
                                             <div class="row">
                                                 <div class="offset-md-3 col-md-9">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Details</button>
-                                                    <a href="{% url 'doctor_profile' %}" type="button" class="btn btn-default">Cancel</a>
+                                                    <a href="{% url 'doc-profile' %}" type="button" class="btn btn-default">Cancel</a>
                                                 </div>
                                             </div>
                                         </div>
