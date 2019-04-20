@@ -480,7 +480,7 @@ def view_patient_profile(request):
     id=request.session['id']
     patient_info=Patient.objects.get(user_id=id)
 
-#doctorid=Doctor.objects.get(user_id=request.session['id'])
+    #doctorid=Doctor.objects.get(user_id=request.session['id'])
 
     allcase=Case.objects.filter(patient_id=patient_info).select_related('patient_id',"doctor_id")
     
@@ -490,3 +490,9 @@ def view_patient_profile(request):
         print("status --> ",i.status)"""
 
     return render(request,"doctorfinder/patient_profile.html",{'patient_info':patient_info,'allcase':allcase})    
+
+def deleteCase(request):
+    case_id=request.POST['caseid']
+    delete_row=Case.objects.get(id=case_id)
+    delete_row.delete()
+    return HttpResponseRedirect(reverse('homepage'))

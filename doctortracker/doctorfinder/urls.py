@@ -43,6 +43,8 @@ urlpatterns = [
     path('doc-profile/',views.doc_profile,name="doc-profile"),
     path('edit-doctor-profile/',views.edit_doctor_profile,name="edit-doctor-profile"),
     path('update-doctor-profile/',views.update_doctor_profile,name="update-doctor-profile"),
+
+    path('delete-case/',views.deleteCase,name="delete-case"),
     
     
     #patient zone
@@ -52,7 +54,7 @@ urlpatterns = [
     path('update-patient-profile/', views.update_patient_profile,name="patient-profile-update"),
     path('view-patient-profile/', views.view_patient_profile,name="view-patient-profile"),
     
-    
+
 
     
 ]

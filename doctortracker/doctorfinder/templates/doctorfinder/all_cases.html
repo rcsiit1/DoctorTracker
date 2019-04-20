@@ -95,7 +95,6 @@
 					                                                <th>Lastname </th>
 					                                                <th>Gender </th>
 					                                                <th>Date of Birth</th>
-					                        
 																	<th>Disease</th>
 																	<th>symptoms</th>
 																	<th>status</th>
@@ -106,11 +105,12 @@
 					                                        <tbody>
 																	
 																{% for data in allcase %}
+																	{% ifequal data.status 'active' %}
 																
 																<tr class="odd gradeX">
 																	<form method="GET" action="" >
 																			{% csrf_token %}
-																	<td><input type="hidden" name="caseid" value="{{caseid.id}}"/>{{data.id}}</td>	
+																	<td><input type="hidden" name="caseid" value="{{data.id}}"/>{{data.id}}</td>	
 																	<td><input type="hidden" name="patientid" value="{{data.id}}"/>{{data.patient_id.id}}</td>	
 																	<td>{{data.doctor_id.firstname}}</td>
 																	<td>{{data.patient_id.firstname}}</td>
@@ -126,10 +126,12 @@
 														
 																
 																	<td>
-																			<button  class="btn  btn-xs"  name="close_case"><i class="fa fa-close "></i>
 																			
-																			</button>
-																			<a  class="formodal btn  btn-xs" id="delete1" name="{{caseid.id}}">
+																		<a class="btn  btn-xs" id="editactivecase" name="{{data.id}}">
+																			<i class="fa fa-edit "></i>
+																		</a>
+
+																			<a  class="formodal btn  btn-xs" id="delete1" name="{{data.id}}">
 																					<i class="fa fa-trash-o "></i>
 																				</a>
 																	
@@ -139,7 +141,7 @@
 									
 																
 																</tr>
-															
+																{% endifequal %}
 															{% endfor %}
 															</tbody>
 														</table>
@@ -223,36 +225,72 @@
 					                                            </div>
 					                                        </div>
 														</div>
-														{% if closed %}
-														{%if  closed_case_id %}
+														{% if allcase %}
+													
 					                                    <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle" id="example1">
 					                                        <thead>
 					                                            <tr>
 																	
 																	<th>Case id</th>
-					                                            	<th>Patient id</th>
+																	<th>Patient id</th>
+																	<th>Doctor Name </th>
 					                                                <th>Firstname </th>
 					                                                <th>Lastname </th>
 					                                                <th>Gender </th>
 					                                                <th>Date of Birth</th>
-					                                                <th>Bloodgroup</th>
-					                                                <th>City</th>
-																	<th>State</th>
 																	<th>Disease</th>
-																	<th>Status</th>
-																	
+																	<th>symptoms</th>
+																	<th>status</th>
+																
 																	<th style="width: 60px;">Action</th>
 					                                            </tr>
 					                                        </thead>
 					                                        <tbody>
 																
-																															
+
+																
+																	
+																	{% for data in allcase %}
+																		{% ifequal data.status 'close' %}
+																	
+																	<tr class="odd gradeX">
+																		<form method="GET" action="" >
+																				{% csrf_token %}
+																		<td><input type="hidden" name="caseid" value="{{caseid.id}}"/>{{data.id}}</td>	
+																		<td><input type="hidden" name="patientid" value="{{data.id}}"/>{{data.patient_id.id}}</td>	
+																		<td>{{data.doctor_id.firstname}}</td>
+																		<td>{{data.patient_id.firstname}}</td>
+											
+																		<td class="left">{{data.patient_id.lastname}}</td>
+																		<td class="left">{{data.patient_id.gender}}</td>
+																		<td class="left">{{data.patient_id.birthdate}}</td>
+																		
+																		<td class="left">{{data.disease}}</td>
+																		<td class="left">{{data.symptoms}}</td>
+	
+																		<td class="left">{{data.status}}</td>
+															
+																	
+																		<td>
+																			
+																		<a class="btn  btn-xs" id="editoldcase" name="{{data.id}}">
+																				<i class="fa fa-edit "></i>
+																			</a>
+																				<a  class="formodal btn  btn-xs" id="deleteclosecase" name="{{caseid.id}}">
+																						<i class="fa fa-trash-o "></i>
+																					</a>
+																		
+																	
+																	</td>
+																		</form>
+										
+																	
+																	</tr>
+																	{% endifequal %}
+																{% endfor %}
 															
 															</tbody>
 														</table>
-														{% else %}
-														<h1> No data in patient database</h1>
-														{% endif %}
 														{% else %}
 														<h1> No data in patient database</h1>
 														{% endif %}
@@ -291,9 +329,9 @@
 						Want to delete?</p>
                   </div>
                   <div class="modal-footer">
-					  <form method="POST" action="">
+					  <form method="POST" action="{% url 'delete-case' %}">
 						{% csrf_token %}
-					  <input type="hidden" id="myid" name="id"/>
+					  <input type="hidden" id="myid" name="caseid" value="{{data.id}}" />
                     <input type="submit" class="btn btn-danger" value="Yes, Delete!" ></input> <button type="button" class="btn btn-success" data-dismiss="modal" style="margin-bottom: 10px">No</button></form>
                   </div>
                 </div>

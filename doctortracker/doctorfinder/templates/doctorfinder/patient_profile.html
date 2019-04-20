@@ -132,7 +132,6 @@
                                                         <form method="POST" action="">
                                                                 {% csrf_token %}
                                                         <td><input type="hidden" name="caseid" value="{{info.id}}"/>{{info.id|default:'NA'}}</td>
-                                                        
                                                         <td>
                                                             <span class="label label-sm">Dr.{{info.doctor_id.firstname}} {{info.doctor_id.lastname}}</span>
                                                         </td>
