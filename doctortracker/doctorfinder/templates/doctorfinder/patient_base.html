@@ -533,7 +533,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-12">
+				<div class="col-md-12 col-sm-12">
 					<div class="card  card-box">
 						<div class="card-head">
 							<header>Other Doctors</header>
@@ -541,31 +541,56 @@
 						</div>
 						<div class="card-body no-padding height-9">
 							<div class="row">
-								{% if all_doctors %}
+								
 								<ul class="docListWindow">
-								{% for doctor in all_doctors %}
 									<li>
-										<div class="prog-avatar">
-											<img src="{{doctor.profile_pic.url}}"></img>
-										</div>
-										<div class="details">
-											<div class="title">
-												<form method="POST" action="">
+										<div class="card-body ">
+							  <div class="table-wrap">
+									<div class="table-responsive">
+										<table class="table display product-overview mb-30" id="support_table">
+											<thead>
+												<tr>
+													<th>Profile</th>
+													<th>Doctor ID</th>
+													<th>Full Name</th>
+													<th>City</th>
+													<th>birthdate</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												{% if all_doctors %}
+												{% for doctor in all_doctors %}
+												<form method="post" action="{% url 'edit-patient-profile' %}">
 													{% csrf_token %}
-												<input type="hidden" name="id" value="{{doctor.id}}"/>
-												<button type="submit" style="border:0;background:0;outline:none;color:red;padding:0;">Dr. {{doctor.firstname|title}}</button> - ({{doctor.qualification}})
-											</form>
-											</div>
-												<div>
-													<span class="clsAvailable">{{doctor.speciality|title}}</span>
-												</div>
-										</div>
+														<tr>
+																<td>
+																<div class="prog-avatar">
+																		<img src="{{doctor.profile_pic.url}}"></img>
+																	</div>
+																</td>
+																<td><input type="hidden" value="{{patient.id}}" name="patient-id"/>{{doctor.id}}</td>
+																<td>Dr. {{doctor.firstname}} {{doctor.lastname}}</td>
+																<td>{{doctor.city}}</td>
+																<td>{{doctor.birthdate}}</td>
+																<!--<td><button type="submit" class="btn btn-primary"><span class="fa fa-pencil"></span></button></td>-->
+															</tr>
+												</form>
+												
+												{% endfor %}
+												{% else %}
+												<h4>No Patients available</h4>
+												{% endif %}
+												</tbody>
+										</table>
+									</div>
+								</div>	
+							</div>
 									</li>
-								{% endfor %}
 									
 									
 								</ul>
-								{% endif %}
+								
 								<div class="text-center full-width">
 									<a href="">View all</a>
 								</div>
@@ -575,56 +600,7 @@
 				</div>
 			</div>
 			 <!-- start admited patient list -->
-			<div class="row">
-				<div class="col-md-12 col-sm-12">
-					<div class="card  card-box">
-						<div class="card-head">
-							<header>PATIENT LIST</header>
-							<div class="tools">
-								<a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-								<a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-								<a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-							</div>
-						</div>
-						<div class="card-body ">
-						  <div class="table-wrap">
-								<div class="table-responsive">
-									<table class="table display product-overview mb-30" id="support_table">
-										<thead>
-											<tr>
-												<th>Patient ID</th>
-												<th>Full Name</th>
-												<th>City</th>
-												<th>Date Of Birth</th>
-												<th>Actions</th>
-											</tr>
-										</thead>
-										<tbody>
-											{% if all_patients %}
-											{% for patient in all_patients %}
-											<form method="post" action="{% url 'edit-patient-profile' %}">
-												{% csrf_token %}
-													<tr>
-															<td><input type="hidden" value="{{patient.id}}" name="patient-id"/>{{patient.id}}</td>
-															<td>{{patient.firstname}} {{patient.lastname}}</td>
-															<td>{{patient.city}}</td>
-															<td>{{patient.birthdate}}</td>
-															<td><button type="submit" class="btn btn-primary"><span class="fa fa-pencil"></span></button></td>
-														</tr>
-											</form>
-											
-											{% endfor %}
-											{% else %}
-											<h4>No Patients available</h4>
-											{% endif %}
-											</tbody>
-									</table>
-								</div>
-							</div>	
-						</div>
-					</div>
-				</div>
-			</div>
+			
 			<!-- end admited patient list -->
 		</div>
 	</div>

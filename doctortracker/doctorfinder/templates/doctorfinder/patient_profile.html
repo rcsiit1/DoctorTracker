@@ -32,6 +32,10 @@
 				                                <!-- .row -->
 				                                <div class="row text-center m-t-10">
                                                     {% if patient_info %}
+                                                    <div class="prog-avatar">
+                                                            <img src="{{patient_info.profile_pic.url}}" style="height:50%;width:50%"></img>
+                                                        </div>
+                                                    </td>
 				                                    <div class="col-lg-6 col-md-12 col-sm-6 col-xs-12 b-r"><strong>Name</strong>
 				                                        <p>{{patient_info.firstname|title}} {{patient_info.lastname|title}}</p>
 				                                    </div>

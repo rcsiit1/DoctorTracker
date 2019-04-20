@@ -459,7 +459,6 @@ def update_doctor_profile(request):
 
 def patient_profile_page(request):
     patient=Patient.objects.get(user_id=request.session['id'])
-
     return render(request,"doctorfinder/patient_settings_base.html",{'patient':patient})
 
 def update_patient_profile(request):
@@ -496,3 +495,39 @@ def deleteCase(request):
     delete_row=Case.objects.get(id=case_id)
     delete_row.delete()
     return HttpResponseRedirect(reverse('homepage'))
+
+def changePatientPassword(request):
+    return render(request,"doctorfinder/change_patient_password.html")    
+    
+def updatePatientPassword(request):
+    id=request.session['id']
+    user=User.objects.get(id=id)
+
+    old_password=user.password
+
+    current=request.POST['current']
+    new_password=request.POST['new_password']
+    confirm=request.POST['confirm']
+
+    if old_password==current and new_password==confirm:
+        user.password=confirm
+        user.save()
+        message="Your Password have been changed successfully!"
+        return render(request,"doctorfinder/password_changed.html")
+    else:
+        error_msg="Incorrect Password , Try Again  !!"
+        return render(request,"doctorfinder/change_patient_password.html",{'error_msg':error_msg})
+      
+def changePatientProfilePic(request):
+    return render(request,"doctorfinder/change_patient_profile_pic.html")
+
+def updatePatientProfilePic(request):
+    patient=Patient.objects.get(user_id=request.session['id'])
+    patient.profile_pic=request.FILES['profile']
+    patient.save()
+    return HttpResponseRedirect(reverse('Patient_Homepage'))
+
+
+    """doctor=Doctor.objects.get(user_id=request.session['id'])
+    doctor.profile_pic=request.FILES['profile']
+    doctor.save()"""
