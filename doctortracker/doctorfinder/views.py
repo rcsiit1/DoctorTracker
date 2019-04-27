@@ -61,20 +61,32 @@ def GetPatientDetails(request):
     return JsonResponse(res,safe=False)
 
 def AddNewCaseToDatabase(request):
-    patient_id = request.GET['patientid']
+    patient_id = request.POST['patientid']
     print('patient ------>',patient_id)
     doctor_id = request.session['id']
     print('sdnfndoigo----->',doctor_id)
     patient = Patient.objects.get(id = patient_id)
-    print(patient)
+    print("PATIENT:______________________",patient)
     doctor = Doctor.objects.get(user_id = doctor_id)  
     print(doctor)
-    disease = request.GET['disease']
-    symptoms = request.GET['symptoms']
-    Case.objects.create(patient_id = patient, doctor_id = doctor, disease = disease, symptoms = symptoms)
+    disease = request.POST['disease']
+    symptoms = request.POST['symptoms']
+    pres=request.FILES['pres']
+
+    print("------------------------------------>",pres)
+   
+    c_id=Case.objects.create(patient_id = patient, doctor_id = doctor, disease = disease, symptoms = symptoms)
+    Prescription.objects.create(case_id=c_id,patient_id=patient,doctor_id=doctor,attachment_file=pres)
+    
     return HttpResponseRedirect(reverse('homepage'))
 
+def upload_file_page(request):
+    return render(request,'doctorfinder/upload_file.html')
 
+def upload_file(request):
+    myfile=request.FILES['myfile']
+    sampleupload.objects.create(a_file=myfile)
+    return HttpResponseRedirect(reverse('homepage'))
 
 def EditPatientprofile(request):
     patient_id = request.POST['patient-id']

@@ -59,7 +59,9 @@ urlpatterns = [
     path('update-Patient-ProfilePic/', views.updatePatientProfilePic,name="update-Patient-ProfilePic"),
     
 
-
+    path('aa', views.upload_file_page,name="upload_file_page"),
+    path('upload/', views.upload_file,name="upload_file"),
+    
     
 ]
 
