@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'doctorfinder',
         'USER':'root',
-        'PASSWORD':'root@123',
+        'PASSWORD':'password',
         'HOST':'localhost',
         'PORT':'3306',
     }
@@ -128,8 +128,15 @@ STATIC_ROOT= os.path.join(BASE_DIR,'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-EMAIL_USE_TLS = True
+"""EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'rcsiit1@gmail.com'
 EMAIL_HOST_PASSWORD = 'rajan@123'
+EMAIL_PORT = 587"""
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'anjali.20.learn@gmail.com'
+EMAIL_HOST_PASSWORD = 'tops@123'
 EMAIL_PORT = 587
+

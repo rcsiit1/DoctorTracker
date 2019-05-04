@@ -89,17 +89,17 @@
  						<!-- start manage user dropdown -->
  						<li class="dropdown dropdown-user">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <img style="height:30px;width:30px;border-radius:90%;border:10px;" src="{{request.session.profile_url}}" style=" border-radius: 90%; border:10px;"/>
+                                <img style="height:30px;width:30px;border-radius:90%;border:10px;"   src="{% static '/doctorfinder/img/doc_male.png' %}"   style=" border-radius: 90%; border:10px;"/>
                                 <span class="username username-hide-on-mobile">{{request.session.firstname|title}}</span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">
                                 <li>
-                                    <a href="{% url 'doctor-profile-picture' %}">
+                                    <a href="{% url 'doc-profile' %}">
                                         <img src="{% static '/doctorfinder/img/account.svg' %}"></img> Profile </a>
                                 </li>
                                 <li>
-                                    <a href="">
+                                    <a href="{% url 'doctor-profile-picture' %}">
                                         <img src="{% static '/doctorfinder/img/settings.svg' %}"></img> Settings
                                     </a>
                                 </li>
@@ -139,7 +139,10 @@
 	                        <li class="sidebar-user-panel">
 	                            <div class="user-panel">
 	                                <div class="pull-left image">
-	                                    <img style="width:77px;height:69px;" src="{{request.session.profile_url}}" class="img-circle user-img-circle" alt="User Image" />
+										
+										<img style="width:77px;height:69px;" src="{% static '/doctorfinder/img/doc_male.png' %}" class="img-circle user-img-circle" alt="User Image" />
+
+										
 	                                </div>
 	                                <div class="pull-left info">
 	                                    <p style="font-size: 16px;"> Dr.{{request.session.firstname|title}}</p>
@@ -210,7 +213,8 @@
 	                            </ul>
 	                        </li>
 							<li class="nav-item  ">
-	                            <a href="#" class="nav-link nav-toggle"> <img src="{% static '/doctorfinder/img/support.svg' %}"></img>
+	                            <a href="#" class="nav-link nav-toggle"> 
+									<!--<img src=""></img>-->
 	                                <span class="title">Support</span> <span class="arrow"></span>
 	                            </a>
 	                            <ul class="sub-menu">

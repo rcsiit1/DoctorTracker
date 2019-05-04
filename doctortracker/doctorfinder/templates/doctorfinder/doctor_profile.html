@@ -1,5 +1,5 @@
 
-			{% extends "enterprise/base.html" %}
+			{% extends "doctorfinder/settings_base.html" %}
 			{% block content %}
 	
 			 
@@ -14,7 +14,7 @@
                             
                         </div>
                     </div>
-                    {% if doctor_info %}
+                    {% if doctor %}
                     <div class="row">
                         <div class="col-md-12">
                             <!-- BEGIN PROFILE SIDEBAR -->
@@ -23,11 +23,11 @@
                                     <div class="card-body no-padding height-9">
                                         <div class="row">
                                             <div class="profile-userpic">
-                                                <img style="width:167px;height:163px;" src="{{doctor_info.profile_pic.url}}" class="img-responsive" alt=""> </div>
+                                                <img style="width:167px;height:163px;" src="{{doctor.profile_pic.url}}" class="img-responsive" alt=""> </div>
                                         </div>
                                         <div class="profile-usertitle">
-                                            <div class="profile-usertitle-name"> Dr.{{doctor_info.firstname|title}} {{doctor_info.lastname|title}} </div>
-                                            <div class="profile-usertitle-job">{{doctor_info.specialization|title}}</div>
+                                            <div class="profile-usertitle-name"> Dr.{{doctor.firstname|title}} {{doctor.lastname|title}} </div>
+                                            <div class="profile-usertitle-job">{{doctor.speciality|title}}</div>
                                         </div>
                                         
                                         <!-- END SIDEBAR USER TITLE -->
@@ -40,12 +40,12 @@
                                     </div>
                                     <div class="card-body no-padding height-9">
                                         <div class="profile-desc">
-                                            {{doctor_info.aboutme|default:"No data,Kindly Update Your Profile"}}   
+                                            {{doctor.about_doc|default:"No data,Kindly Update Your Profile"}}   
                                         </div>
                                         <ul class="list-group list-group-unbordered">
                                             <li class="list-group-item">
                                                 <b>Gender </b>
-                                                <div class="profile-desc-item pull-right">{{doctor_info.gender|title}}</div>
+                                                <div class="profile-desc-item pull-right">{{doctor.gender|title}}</div>
                                             </li>
                                             
                                         
@@ -58,8 +58,9 @@
                                     <div class="card-body no-padding height-9">
                                         <div class="row text-center m-t-10">
                                     <div class="col-md-12">
-                                        <p>{{doctor_info.street}}, {{doctor_info.city|title}}
-                                            <br> {{doctor_info.state|title}}, {{doctor_info.country|title}}.</p>
+                                        <h5>{{doctor.address}},</h5>
+                                        <p>{{doctor.location}} <br> {{doctor.city|title}}
+                                            <br> {{doctor.state|title}}</p>
                                     </div>
                                 </div>
                                     </div>
@@ -89,15 +90,15 @@
 							                                    <div class="row">
 							                                        <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
 							                                            <br>
-							                                            <p class="text-muted">Dr.{{doctor_info.firstname|title}} {{doctor_info.lastname|title}}</p>
+							                                            <p class="text-muted">Dr.{{doctor.firstname|title}} {{doctor.lastname|title}}</p>
 							                                        </div>
 							                                        <div class="col-md-3 col-xs-6"> <strong>Location</strong>
 							                                            <br>
-							                                            <p class="text-muted">{{doctor_info.country|title}}</p>
+							                                            <p class="text-muted">{{doctor.location|title}}</p>
 							                                        </div>
 																	<div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
 							                                            <br>
-							                                            <p class="text-muted">{{doctor_info.user_id}}</p>
+							                                            <p class="text-muted">{{request.session.email}}</p>
 							                                        </div>
 							                                    </div>
 							                                    <hr>
@@ -106,37 +107,20 @@
 							                                    <h4 class="font-bold">Qualification</h4>
 							                                    <hr>
 							                                    <ul>
-							                                     {{doctor_info.qualification|title}}   
+                                                                    {{doctor.qualification|default:"No data,Kindly Update Your Profile"}} 
 							                                    </ul>
 							                                    <br>
 							                                    <h4 class="font-bold">Specialization</h4>
 							                                    <hr>
 							                                    <ul>
-                                                                    {{doctor_info.specialization|title}}   
+                                                                    {{doctor.speciality|title}}   
 							                                    </ul>
                                                                 <br>
-                                                                <h4 class="font-bold">Acheivements</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor_info.achievements|default:"No data,Kindly Update Your Profile"}}
-							                                    </ul>
-							                                    <br>
-							                                    <h4 class="font-bold">Conferences</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor_info.conferences|default:"No data,Kindly Update Your Profile"}}  
-							                                    </ul>
-                                                                <br>
-                                                                <h4 class="font-bold">Membership under Association</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor_info.membership|default:"No data,Kindly Update Your Profile"}}
-							                                    </ul>
-                                                                <br>
+                                                                
                                                                 <h4 class="font-bold">Hospitals I work For</h4>
 							                                    <hr>
 							                                    <ul>
-                                                                    {{doctor_info.hospitals|default:"No data,Kindly Update Your Profile"}} 
+                                                                    {{doctor.clinic|default:"No data,Kindly Update Your Profile"}} 
 							                                    </ul>
 							                                    <br>
 							                                </div>

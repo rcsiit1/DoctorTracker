@@ -1,4 +1,4 @@
-{% extends "doctortracker/settings_base.html" %}
+{% extends "doctorfinder/settings_base.html" %}
             <!-- start page content -->
             {% load static %}
 			{% block content %}
@@ -33,9 +33,9 @@
                                                     <div class="card-body no-padding height-9">
                                                         <div class="row">
                                                             <div class="profile-userpic">
-                                                                <img style="width:144px;height:144px;" id="myimage" src="{{request.session.profile_url}}" class="img-responsive" alt=""> </div>
+                                                                <img style="width:144px;height:144px;" id="myimage" src="{{request.session.profile_url.url}}" class="img-responsive" alt=""> </div>
                                                         </div>
-                                                        <form method="POST" action="{% url 'change_profile' %}" enctype="multipart/form-data">
+                                                        <form method="POST" action="{% url 'change-doctor-pic' %}" enctype="multipart/form-data">
                                                             {% csrf_token %}
                                                         <div class="row">
                                                                 <div class="profile-userpic">
