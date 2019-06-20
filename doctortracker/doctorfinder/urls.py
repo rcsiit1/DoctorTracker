@@ -43,11 +43,11 @@ urlpatterns = [
     path('doc-profile/',views.doc_profile,name="doc-profile"),
     path('edit-doctor-profile/',views.edit_doctor_profile,name="edit-doctor-profile"),
     path('update-doctor-profile/',views.update_doctor_profile,name="update-doctor-profile"),
-
     path('delete-case/',views.deleteCase,name="delete-case"),
+    path('get-schedules/',views.getAvailableSchedules,name="get-schedules"),
     
     
-    #patient zone
+    #patient urls
     path('patient-homepage/',views.Patient_Homepage,name="Patient_Homepage"),
     path('update-patient-Health-profile/', views.update_Patient_Health_ProfilePage,name="update-patient-profile"),
     path('patient-profile-page/', views.patient_profile_page,name="edit-patient-profile-page"),
@@ -57,12 +57,17 @@ urlpatterns = [
     path('update-patient-password/', views.updatePatientPassword,name="update-patient-password"),
     path('change-Patient-ProfilePic/', views.changePatientProfilePic,name="change-Patient-ProfilePic"),
     path('update-Patient-ProfilePic/', views.updatePatientProfilePic,name="update-Patient-ProfilePic"),
-    
-
     path('aa', views.upload_file_page,name="upload_file_page"),
     path('upload/', views.upload_file,name="upload_file"),
+    path('book-appointment/', views.bookAppointmentPage,name="book-appointment"),
+    path('mark-availability/', views.markAvailability,name="mark-availability"),
+    path('store-all-availabilities/',views.storeAllSchedules,name="store-all-availabilities"),
+    path('delete-schedule/',views.deleteSchedule,name="delete-schedule"),
+    path('delete-appointment/',views.deleteAppointment,name="delete-appointment"),
+    path('book-appointment-patient/',views.bookAppointment,name="book-appointment-patient")
+    
     
     
 ]
-
+ 
 
