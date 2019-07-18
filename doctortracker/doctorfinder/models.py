@@ -5,7 +5,7 @@ from django.db import models
 class User(models.Model):
     email = models.EmailField(unique= True)
     password = models.CharField(max_length = 20)
-    otp = models.IntegerField(default = 459)
+    # otp = models.IntegerField(default = 459)
     is_active = models.BooleanField(default=True)
     is_verfied = models.BooleanField(default=False)
     role = models.CharField(max_length = 10)

@@ -1,151 +1,322 @@
+{% extends "doctorfinder/settings_base.html" %}
+{% block content %}
 
-			{% extends "doctorfinder/settings_base.html" %}
-			{% block content %}
-	
-			 
-			 
-			  <div class="page-content-wrapper">
-                <div class="page-content">
-                    <div class="page-bar">
-                        <div class="page-title-breadcrumb">
-                            <div class=" pull-left">
-                                <div class="page-title">Doctor Profile</div>
+<style>
+    /* Always set the map height explicitly to define the size of the div
+* element that contains the map. */
+    #map {
+        height: 100%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+    }
+
+    #infowindow-content .title {
+        font-weight: bold;
+    }
+
+    #infowindow-content {
+        display: none;
+    }
+
+    #map #infowindow-content {
+        display: inline;
+    }
+
+    .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+    }
+
+    #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+    }
+
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+    }
+
+    .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+    }
+
+    #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin: 10px 12px;
+        padding: 5px;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
+
+    #pac-input:focus {
+        border-color: #4d90fe;
+    }
+
+    #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+    }
+
+    #target {
+        width: 345px;
+    }
+</style>
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <div class="page-title-breadcrumb">
+                <div class=" pull-left">
+                    <div class="page-title">Doctor Profile</div>
+                </div>
+
+            </div>
+        </div>
+        {% if doctor %}
+        <div class="row">
+            <div class="col-md-12">
+                <!-- BEGIN PROFILE SIDEBAR -->
+                <div class="profile-sidebar">
+                    <div class="card card-topline-aqua">
+                        <div class="card-body no-padding height-9">
+                            <div class="row">
+                                <div class="profile-userpic">
+                                    <img style="width:167px;height:163px;" src="{{doctor.profile_pic.url}}"
+                                        class="img-responsive" alt=""> </div>
                             </div>
-                            
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name"> Dr.{{doctor.firstname|title}}
+                                    {{doctor.lastname|title}} </div>
+                                <div class="profile-usertitle-job">{{doctor.speciality|title}}</div>
+                            </div>
+
+                            <!-- END SIDEBAR USER TITLE -->
+
                         </div>
                     </div>
-                    {% if doctor %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- BEGIN PROFILE SIDEBAR -->
-                            <div class="profile-sidebar">
-                                <div class="card card-topline-aqua">
-                                    <div class="card-body no-padding height-9">
-                                        <div class="row">
-                                            <div class="profile-userpic">
-                                                <img style="width:167px;height:163px;" src="{{doctor.profile_pic.url}}" class="img-responsive" alt=""> </div>
-                                        </div>
-                                        <div class="profile-usertitle">
-                                            <div class="profile-usertitle-name"> Dr.{{doctor.firstname|title}} {{doctor.lastname|title}} </div>
-                                            <div class="profile-usertitle-job">{{doctor.speciality|title}}</div>
-                                        </div>
-                                        
-                                        <!-- END SIDEBAR USER TITLE -->
-                                        
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-head card-topline-aqua">
-                                        <header>About Me</header>
-                                    </div>
-                                    <div class="card-body no-padding height-9">
-                                        <div class="profile-desc">
-                                            {{doctor.about_doc|default:"No data,Kindly Update Your Profile"}}   
-                                        </div>
-                                        <ul class="list-group list-group-unbordered">
-                                            <li class="list-group-item">
-                                                <b>Gender </b>
-                                                <div class="profile-desc-item pull-right">{{doctor.gender|title}}</div>
-                                            </li>
-                                            
-                                        
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-head card-topline-aqua">
-                                        <header>Address</header>
-                                    </div>
-                                    <div class="card-body no-padding height-9">
-                                        <div class="row text-center m-t-10">
-                                    <div class="col-md-12">
-                                        <h5>{{doctor.address}},</h5>
-                                        <p>{{doctor.location}} <br> {{doctor.city|title}}
-                                            <br> {{doctor.state|title}}</p>
-                                    </div>
-                                </div>
-                                    </div>
-                                </div>
-                                
+                    <div class="card">
+                        <div class="card-head card-topline-aqua">
+                            <header>About Me</header>
+                        </div>
+                        <div class="card-body no-padding height-9">
+                            <div class="profile-desc">
+                                {{doctor.about_doc|default:"No data,Kindly Update Your Profile"}}
                             </div>
-                            <!-- END BEGIN PROFILE SIDEBAR -->
-                            <!-- BEGIN PROFILE CONTENT -->
-                         <div class="profile-content">
-                                <div class="row">
-                                     <div class="card">
-                                         <div class="card-topline-aqua">
-                                             <header></header>
-                                         </div>
-											<div class="white-box">
-					                            <!-- Nav tabs -->
-					                            <div class="p-rl-20">
-						                            <ul class="nav customtab nav-tabs" role="tablist">
-						                                <li class="nav-item"><a href="#tab1" class="nav-link active"  data-toggle="tab" >About Me</a></li>
-						                                
-						                            </ul>
-					                            </div>
-					                            <!-- Tab panes -->
-					                            <div class="tab-content">
-					                                <div class="tab-pane active fontawesome-demo" id="tab1">
-															<div id="biography" >
-							                                    <div class="row">
-							                                        <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
-							                                            <br>
-							                                            <p class="text-muted">Dr.{{doctor.firstname|title}} {{doctor.lastname|title}}</p>
-							                                        </div>
-							                                        <div class="col-md-3 col-xs-6"> <strong>Location</strong>
-							                                            <br>
-							                                            <p class="text-muted">{{doctor.location|title}}</p>
-							                                        </div>
-																	<div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
-							                                            <br>
-							                                            <p class="text-muted">{{request.session.email}}</p>
-							                                        </div>
-							                                    </div>
-							                                    <hr>
-							                                    <p class="m-t-30">
-							                                    <br>
-							                                    <h4 class="font-bold">Qualification</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor.qualification|default:"No data,Kindly Update Your Profile"}} 
-							                                    </ul>
-							                                    <br>
-							                                    <h4 class="font-bold">Specialization</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor.speciality|title}}   
-							                                    </ul>
-                                                                <br>
-                                                                
-                                                                <h4 class="font-bold">Hospitals I work For</h4>
-							                                    <hr>
-							                                    <ul>
-                                                                    {{doctor.clinic|default:"No data,Kindly Update Your Profile"}} 
-							                                    </ul>
-							                                    <br>
-							                                </div>
-													</div>
-					                                
-		                                                </div>
-														</div>
-													</div>
-					                            </div>
-					                        </div>
-                                         </div>
-                                     </div>
-                                </div>
-                                
-					
-									{% endif%}		
-											
-											
-											
-											<!-- Loading script files -->
+                            <ul class="list-group list-group-unbordered">
+                                <li class="list-group-item">
+                                    <b>Gender </b>
+                                    <div class="profile-desc-item pull-right">{{doctor.gender|title}}</div>
+                                </li>
 
-			{% endblock%}
-			
-                <!-- end page content -->
-                
-    
-      
-        
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head card-topline-aqua">
+                            <header>Address</header>
+                        </div>
+                        <div class="card-body no-padding height-9">
+                            <div class="row text-center m-t-10">
+                                <div class="col-md-12">
+                                    <h5>{{doctor.address}},</h5>
+                                    <p>{{doctor.location}} <br> {{doctor.city|title}}
+                                        <br> {{doctor.state|title}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END BEGIN PROFILE SIDEBAR -->
+                <!-- BEGIN PROFILE CONTENT -->
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-topline-aqua">
+                                <header></header>
+                            </div>
+                            <div class="white-box">
+                                <!-- Nav tabs -->
+                                <div class="p-rl-20">
+                                    <ul class="nav customtab nav-tabs" role="tablist">
+                                        <li class="nav-item"><a href="#tab1" class="nav-link active"
+                                                data-toggle="tab">About Me</a></li>
+
+                                    </ul>
+                                </div>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active fontawesome-demo" id="tab1">
+                                        <div id="biography">
+                                            <div class="row">
+                                                <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
+                                                    <br>
+                                                    <p class="text-muted">Dr.{{doctor.firstname|title}}
+                                                        {{doctor.lastname|title}}</p>
+                                                </div>
+                                                <div class="col-md-3 col-xs-6"> <strong>Location</strong>
+                                                    <br>
+                                                    <p class="text-muted">{{doctor.location|title}}</p>
+                                                </div>
+                                                <div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
+                                                    <br>
+                                                    <p class="text-muted">{{request.session.email}}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <p class="m-t-30">
+                                                <br>
+                                                <h4 class="font-bold">Qualification</h4>
+                                                <hr>
+                                                <ul>
+                                                    {{doctor.qualification|default:"No data,Kindly Update Your Profile"}}
+                                                </ul>
+                                                <br>
+                                                <h4 class="font-bold">Specialization</h4>
+                                                <hr>
+                                                <ul>
+                                                    {{doctor.speciality|title}}
+                                                </ul>
+                                                <br>
+
+                                                <h4 class="font-bold">Hospitals I work For</h4>
+                                                <hr>
+                                                <ul>
+                                                    {{doctor.clinic|default:"No data,Kindly Update Your Profile"}}
+                                                </ul>
+                                                <br>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <input id="lat" type="text">
+    <input id="lng" type="text">
+    <div id="map"></div>
+    <script>
+
+        function initAutocomplete() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 51.4960714, lng: -0.102279 },
+                zoom: 13,
+                mapTypeId: 'satellite'
+            });
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function (marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0, place; place = places[i]; i++) {
+                    var image = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+                    var marker = new google.maps.Marker({
+                        draggable: true,
+                        map: map,
+                        icon: image,
+                        title: place.name,
+                        position: place.geometry.location
+                    });
+
+                    document.getElementById('lat').value = marker.getPosition().lat().toFixed(6);
+                    document.getElementById('lng').value = marker.getPosition().lng().toFixed(6);
+                    // drag response
+                    google.maps.event.addListener(marker, 'dragend', function (e) {
+                        displayPosition(this.getPosition());
+                    });
+                    // click response
+                    google.maps.event.addListener(marker, 'click', function (e) {
+                        displayPosition(this.getPosition());
+                    });
+                    markers.push(marker);
+                    bounds.extend(place.geometry.location);
+                }
+
+                map.fitBounds(bounds);
+            });
+
+            google.maps.event.addListener(map, 'bounds_changed', function () {
+                var bounds = map.getBounds();
+                searchBox.setBounds(bounds);
+            });
+
+            // displays a position on two <input> elements
+            function displayPosition(pos) {
+                document.getElementById('lat').value = pos.lat();
+                document.getElementById('lng').value = pos.lng();
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhD67HN4TjiBgtbt7wH97DWoG4DZr9cgE&libraries=places&callback=initAutocomplete"
+    async defer></script>
+
+    {% endif%}
+
+
+
+    <!-- Loading script files -->
+
+    {% endblock%}
+
+    <!-- end page content -->
