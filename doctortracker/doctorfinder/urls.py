@@ -64,8 +64,12 @@ urlpatterns = [
     path('store-all-availabilities/',views.storeAllSchedules,name="store-all-availabilities"),
     path('delete-schedule/',views.deleteSchedule,name="delete-schedule"),
     path('delete-appointment/',views.deleteAppointment,name="delete-appointment"),
-    path('book-appointment-patient/',views.bookAppointment,name="book-appointment-patient")
-    
+    path('book-appointment-patient/',views.bookAppointment,name="book-appointment-patient"),
+    path('payment/',views.paymentPage,name="payment-page"),
+    path('checkout/',views.createStripeSession,name="checkout"),
+    path('success/',views.paymentSuccessPage,name="success"),
+    path('fail/',views.paymentFailPage,name="fail"),
+    path('purchase-fullfillment/',views.purchaseFullfillment,name="webhook-fullfillment")
     
     
 ]

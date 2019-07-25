@@ -1,10 +1,12 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import *
 from random import randint
 from .utils import *
 from django.core import serializers
 from datetime import datetime, timedelta, date
+import stripe
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -645,22 +647,92 @@ def deleteAppointment(request):
     except:
         return HttpResponseRedirect(reverse('mark-availability'))
 
+
 def getAvailableSchedules(request):
     doctor_id = request.GET['id']
     print('patientid ----------->', doctor_id)
     doctor_details = Doctor.objects.get(id=doctor_id)
     print(doctor_details)
-    availability_list = availability.objects.filter(doctor_id = doctor_details, status = False)
+    availability_list = availability.objects.filter(
+        doctor_id=doctor_details, status=False)
     res = serializers.serialize('json', availability_list)
     return JsonResponse(res, safe=False)
+
 
 def bookAppointment(request):
     doctor_id = request.POST['doctor_id']
     schedule_id = request.POST['schedule_id']
-    patient_id = Patient.objects.get(user_id = request.session['id'])
-    doctor = Doctor.objects.get(id = doctor_id)
-    schedule = availability.objects.get( id = schedule_id)
+    patient_id = Patient.objects.get(user_id=request.session['id'])
+    doctor = Doctor.objects.get(id=doctor_id)
+    schedule = availability.objects.get(id=schedule_id)
     schedule.status = True
     schedule.save()
-    Appointment.objects.create(doctor_id = doctor,patient_id= patient_id,availability_id = schedule, appointment_status = True)
+    Appointment.objects.create(doctor_id=doctor, patient_id=patient_id,
+                               availability_id=schedule, appointment_status=True)
     return HttpResponseRedirect(reverse('book-appointment'))
+
+
+def paymentPage(request):
+    return render(request, "doctorfinder/payment.html")
+
+
+def paymentSuccessPage(request):
+    return render(request, "doctorfinder/success.html")
+
+
+def paymentFailPage(request):
+    return render(request, "doctorfinder/unsuccessfulls.html")
+
+
+def createStripeSession(request):
+    if 'email' in request.session and 'role' in request.session:
+        customer_details = Payments.objects.filter(
+            email=request.session['email'])
+        if customer_details:
+            print('inside if statement')
+            session = startStripeSession(customer_details[0].customer_id)
+            #print('this is session', session)
+            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+        else:
+            print('inside else')
+            customer = stripe.Customer.create(email=request.session['email'])
+            Payments.objects.create(
+                email=request.session['email'], customer_id=customer.id, user_id=User.objects.get(id=request.session['id']))
+            session = startStripeSession(customer.id)
+            #print('this is session', session)
+            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+
+    else:
+        return HttpResponseRedirect(reverse('login'))
+
+
+# You can find your endpoint's secret in your webhook settings
+endpoint_secret = 'enter your webhook key'
+
+
+@csrf_exempt
+def purchaseFullfillment(request):
+    print('webhook called --------------------------------------___>')
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fulfill the purchase...
+        print('this is the session object from webhook',session)
+
+    return HttpResponse(status=200)

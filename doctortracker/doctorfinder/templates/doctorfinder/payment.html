@@ -1,0 +1,46 @@
+{% extends "doctorfinder/patient_base.html" %}
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <div class="page-title-breadcrumb">
+                <div class=" pull-left">
+                    <div class="page-title">Pay For Appointment</div>
+                </div>
+                <ol class="breadcrumb page-breadcrumb pull-right">
+                    <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="index.html">Home</a>&nbsp;<i
+                            class="fa fa-angle-right"></i>
+                    </li>
+                    <li><a class="parent-item" href="#">Appointment Checkout</a>&nbsp;<i class="fa fa-angle-right"></i>
+                    </li>
+                    <li class="active">Confirm Booking</li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="card card-box">
+                    <div class="card-head">
+                        <header>Pay</header>
+                    </div>
+                    <div class="card-body" id="bar-parent">
+                        <form method="POST" action="{% url 'checkout' %}"  class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-body">
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="offset-md-3 col-md-9">
+                                            <button type="submit" class="btn btn-success">Pay for Appointment</button>
+                                        </div>
+                                    </div><br><br><br>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

@@ -5,7 +5,7 @@ from django.db import models
 class User(models.Model):
     email = models.EmailField(unique= True)
     password = models.CharField(max_length = 20)
-    # otp = models.IntegerField(default = 459)
+    otp = models.IntegerField(default = 459)
     is_active = models.BooleanField(default=True)
     is_verfied = models.BooleanField(default=False)
     role = models.CharField(max_length = 10)
@@ -73,4 +73,7 @@ class Prescription(models.Model):
     attachment_file = models.FileField()
     created_at = models.DateTimeField(auto_now_add=True,blank=False)
 
-
+class Payments(models.Model):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    email = models.CharField(max_length=200)
+    customer_id =  models.CharField(max_length=300)
