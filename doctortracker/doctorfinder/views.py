@@ -346,7 +346,6 @@ def allcase(request):
             return HttpResponseRedirect(reverse('Homepage'))   
     except User.DoesNotExist:
         return HttpResponseRedirect(reverse('Homepage'))
-
 """
 
 
@@ -660,16 +659,33 @@ def getAvailableSchedules(request):
 
 
 def bookAppointment(request):
-    doctor_id = request.POST['doctor_id']
-    schedule_id = request.POST['schedule_id']
-    patient_id = Patient.objects.get(user_id=request.session['id'])
-    doctor = Doctor.objects.get(id=doctor_id)
-    schedule = availability.objects.get(id=schedule_id)
-    schedule.status = True
-    schedule.save()
-    Appointment.objects.create(doctor_id=doctor, patient_id=patient_id,
-                               availability_id=schedule, appointment_status=True)
-    return HttpResponseRedirect(reverse('book-appointment'))
+    if 'email' in request.session and 'role' in request.session:
+        doctor_id = request.POST['doctor_id']
+        schedule_id = request.POST['schedule_id']
+        patient_id = Patient.objects.get(user_id=request.session['id'])
+        doctor = Doctor.objects.get(id=doctor_id)
+        schedule = availability.objects.get(id=schedule_id)
+        schedule.status = True
+        schedule.save()
+        new_appointment = Appointment.objects.create(doctor_id=doctor, patient_id=patient_id,
+                                availability_id=schedule, appointment_status=True)
+        customer_details = Payments.objects.filter(
+            email=request.session['email'])
+        if customer_details:
+            print('inside if statement')
+            session = startStripeSession(customer_details[0].customer_id,new_appointment.pk)
+            #print('this is session', session)
+            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+        else:
+            print('inside else')
+            customer = stripe.Customer.create(email=request.session['email'])
+            Payments.objects.create(
+                email=request.session['email'], customer_id=customer.id, user_id=User.objects.get(id=request.session['id']))
+            session = startStripeSession(customer.id,new_appointment.pk)
+            #print('this is session', session)
+            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+    else:
+        return HttpResponseRedirect(reverse('login'))
 
 
 def paymentPage(request):
@@ -683,36 +699,45 @@ def paymentSuccessPage(request):
 def paymentFailPage(request):
     return render(request, "doctorfinder/unsuccessfulls.html")
 
+def confirmPaymentStatus(appointment_id):
+    try:
+        appointment_details = Appointment.objects.get(id = appointment_id)
+        appointment_details.payment_status = True
+        appointment_details.save()
+        return True
+    except:
+        return False
 
-def createStripeSession(request):
-    if 'email' in request.session and 'role' in request.session:
-        customer_details = Payments.objects.filter(
-            email=request.session['email'])
-        if customer_details:
-            print('inside if statement')
-            session = startStripeSession(customer_details[0].customer_id)
-            #print('this is session', session)
-            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
-        else:
-            print('inside else')
-            customer = stripe.Customer.create(email=request.session['email'])
-            Payments.objects.create(
-                email=request.session['email'], customer_id=customer.id, user_id=User.objects.get(id=request.session['id']))
-            session = startStripeSession(customer.id)
-            #print('this is session', session)
-            return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+# def createStripeSession(request):
+#     if 'email' in request.session and 'role' in request.session:
+#         customer_details = Payments.objects.filter(
+#             email=request.session['email'])
+#         if customer_details:
+#             print('inside if statement')
+#             session = startStripeSession(customer_details[0].customer_id)
+#             #print('this is session', session)
+#             return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
+#         else:
+#             print('inside else')
+#             customer = stripe.Customer.create(email=request.session['email'])
+#             Payments.objects.create(
+#                 email=request.session['email'], customer_id=customer.id, user_id=User.objects.get(id=request.session['id']))
+#             session = startStripeSession(customer.id)
+#             #print('this is session', session)
+#             return render(request, "doctorfinder/checkout.html", {'CHECKOUT_SESSION_ID': session.id})
 
-    else:
-        return HttpResponseRedirect(reverse('login'))
+#     else:
+#         return HttpResponseRedirect(reverse('login'))
 
 
 # You can find your endpoint's secret in your webhook settings
-endpoint_secret = 'enter your webhook key'
+
 
 
 @csrf_exempt
 def purchaseFullfillment(request):
     print('webhook called --------------------------------------___>')
+    endpoint_secret = 'whsec_GRxruQGY346JH3EnZxV7WUsNMJtmgEv9'
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
@@ -734,5 +759,11 @@ def purchaseFullfillment(request):
 
         # Fulfill the purchase...
         print('this is the session object from webhook',session)
+        confirmPaymentStatus(session.display_items[0].custom.description)
 
     return HttpResponse(status=200)
+
+def listAllScheduledAppointments(request):
+    patient_details = Patient.objects.get( user_id = request.session['id'])
+    all_appointments = Appointment.objects.filter(patient_id = patient_details)
+    return render(request,"doctorfinder/list_appointments.html",{'all_appointments':all_appointments})

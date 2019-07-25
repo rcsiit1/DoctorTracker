@@ -6,3 +6,6 @@ admin.site.register(Doctor)
 admin.site.register(Patient)
 admin.site.register(Case)
 admin.site.register(Payments)
+admin.site.register(availability)
+admin.site.register(Appointment)
+

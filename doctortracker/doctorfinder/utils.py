@@ -4,7 +4,7 @@ from django.utils.html import strip_tags
 from datetime import datetime, timedelta
 import stripe
 
-stripe.api_key = 'enter your secret key'
+stripe.api_key = 'sk_test_VjI08rWMXjV43fSbR1DowYSc00mljgO3W9'
 
 def sendmail(subject,template,to,context):
     subject = 'Subject'
@@ -30,19 +30,19 @@ def availableTimeSlots():
             print("{:%H:%M} - {:%H:%M}".format(start, start + duration))
             start += duration
 
-def startStripeSession(customer_id):
+def startStripeSession(customer_id, appointment_id):
     session = stripe.checkout.Session.create(
             customer =  customer_id,
             payment_method_types=['card'],
             line_items=[{
                 'name': 'Doctor Appointment',
-                'description': 'Appointment payment',
+                'description': appointment_id,
                 'images': ['https://pixabay.com/illustrations/meeting-relationship-business-1019875/'],
                 'amount': 50000,
                 'currency': 'inr',
                 'quantity': 1,
             }],
-            success_url='http://localhost:8000/enterprise/success',
+            success_url='http://localhost:8000/enterprise/booked-appointments/',
             cancel_url='http://localhost:8000/enterprise/fail',
             )
     return session

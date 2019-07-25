@@ -65,6 +65,7 @@ class Appointment(models.Model):
     patient_id = models.ForeignKey(Patient, on_delete = models.CASCADE)
     availability_id = models.ForeignKey(availability, on_delete = models.CASCADE,default = None)
     appointment_status = models.BooleanField(default = False)
+    payment_status = models.BooleanField(default = False)
 
 class Prescription(models.Model):
     case_id = models.ForeignKey(Case, on_delete=models.CASCADE)
