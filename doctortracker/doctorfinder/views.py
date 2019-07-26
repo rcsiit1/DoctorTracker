@@ -737,7 +737,7 @@ def confirmPaymentStatus(appointment_id):
 @csrf_exempt
 def purchaseFullfillment(request):
     print('webhook called --------------------------------------___>')
-    endpoint_secret = 'whsec_GRxruQGY346JH3EnZxV7WUsNMJtmgEv9'
+    endpoint_secret = 'enter webhook secret key here'
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None

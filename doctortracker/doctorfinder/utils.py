@@ -4,7 +4,7 @@ from django.utils.html import strip_tags
 from datetime import datetime, timedelta
 import stripe
 
-stripe.api_key = 'sk_test_VjI08rWMXjV43fSbR1DowYSc00mljgO3W9'
+stripe.api_key = 'enter api secret key here'
 
 def sendmail(subject,template,to,context):
     subject = 'Subject'
